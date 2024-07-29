@@ -1,9 +1,4 @@
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-}
+import { Task } from "./task.interface";
 
 export default function TaskCard(props: {
   task: Task;
