@@ -1,9 +1,13 @@
-import { render } from "@testing-library/react";
-import { describe, expect, test } from "vitest";
+import { cleanup, render } from "@testing-library/react";
+import { afterEach, describe, expect, test } from "vitest";
 import Accordion from "./accordion";
 import { AccordionSection } from "./accordion-section.interface";
 
 describe("Accordion", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   test("Empty Accordion", async () => {
     const result = render(<Accordion sections={[]} />);
     expect(result.getByTestId("accordion")).not.toBeNull();

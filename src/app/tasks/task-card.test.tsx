@@ -1,8 +1,12 @@
-import { render } from "@testing-library/react";
-import { describe, expect, test } from "vitest";
+import { cleanup, render } from "@testing-library/react";
+import { afterEach, describe, expect, test } from "vitest";
 import TaskCard from "./task-card";
 
 describe("Task Card", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   test("renders task card title", () => {
     const result = render(
       <TaskCard
