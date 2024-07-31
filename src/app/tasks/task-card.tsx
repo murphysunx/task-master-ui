@@ -1,7 +1,7 @@
-import { Task } from "./task.interface";
+import { ITask } from "./interfaces/task.interface";
 
 export default function TaskCard(props: {
-  task: Task;
+  task: ITask;
   showDescription?: boolean;
 }) {
   const { task, showDescription } = props;

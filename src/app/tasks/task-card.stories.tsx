@@ -10,7 +10,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const todo: Story = {
+export const Todo: Story = {
   args: {
     task: {
       id: "1",
