@@ -1,28 +1,34 @@
-import { computed, makeAutoObservable } from "mobx";
-import { ITaskList } from "../interfaces/taskList.interface";
-import TaskList from "../models/task-list";
+import { makeAutoObservable } from "mobx";
+import TaskListStore from "./TaskListStore";
 
 class TaskStore {
-  taskLists: TaskList[] = [];
+  taskLists: Map<string, TaskListStore> = new Map();
 
   constructor() {
-    makeAutoObservable(this, {
-      getTaskListById: computed,
-    });
+    makeAutoObservable(this);
   }
 
-  addTaskList(taskList: ITaskList) {
-    this.taskLists.push(new TaskList(taskList));
+  // Add a new task list
+  addTaskList(id: string, name: string): void {
+    if (!this.taskLists.has(id)) {
+      this.taskLists.set(id, new TaskListStore({ id, name }));
+    }
   }
 
-  getTaskListById(id: string) {
-    return this.taskLists.find((taskList) => taskList.id === id);
+  // Remove a task list by ID
+  removeTaskList(id: string): void {
+    this.taskLists.delete(id);
   }
 
-  removeTaskList(id: string) {
-    this.taskLists = this.taskLists.filter((taskList) => taskList.id !== id);
+  // Get a task list by ID
+  getTaskList(id: string): TaskListStore | undefined {
+    return this.taskLists.get(id);
+  }
+
+  // Get all task lists
+  get allTaskLists(): TaskListStore[] {
+    return Array.from(this.taskLists.values());
   }
 }
 
-const taskStore = new TaskStore();
-export default taskStore;
+export default TaskStore;

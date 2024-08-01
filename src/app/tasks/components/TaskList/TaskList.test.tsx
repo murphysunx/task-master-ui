@@ -8,7 +8,7 @@ import {
 import { beforeEach, describe, expect, it } from "vitest";
 import { ITask } from "../../interfaces/task.interface";
 import { ITaskList } from "../../interfaces/taskList.interface";
-import TaskListStore from "../../stores/taskListStore";
+import TaskListStore from "../../stores/TaskListStore";
 import { TaskListView } from "./TaskList";
 
 describe("TaskList Component", () => {
