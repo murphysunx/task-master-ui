@@ -1,21 +1,21 @@
+import { partition } from "lodash";
 import { makeAutoObservable } from "mobx";
 import { ITask } from "../interfaces/task.interface";
-import { ITaskList } from "../interfaces/taskList.interface";
+import pluralize from "@/app/utils/pluralize";
 
 export default class TaskListStore {
-  id: string;
-  name: string;
-  tasks: ITask[] = [];
+  private name: string;
+  private tasks: ITask[] = [];
   showAll: boolean = false;
 
-  constructor(taskList: ITaskList) {
-    this.id = taskList.id;
-    this.name = taskList.name;
+  constructor(name: string) {
+    this.name = name;
     makeAutoObservable(this);
   }
 
-  get nonCompletedTasksCount(): number {
-    return this.tasks.filter((task) => !task.completed).length;
+  get todoMessage() {
+    const todos = this.tasks.filter((t) => !t.completed);
+    return `${todos.length} ${pluralize(todos.length, "task", "tasks")} remaining`;
   }
 
   get emptyMessage(): string {
@@ -26,9 +26,10 @@ export default class TaskListStore {
     const sortedTasks = this.tasks
       .slice()
       .sort((a, b) => a.title.localeCompare(b.title));
-    const nonCompletedTasks = sortedTasks.filter((task) => !task.completed);
-    const completedTasks = sortedTasks.filter((task) => task.completed);
-
+    const [nonCompletedTasks, completedTasks] = partition(
+      sortedTasks,
+      (task) => !task.completed
+    );
     const allTasks = [...nonCompletedTasks, ...completedTasks];
     return this.showAll ? allTasks : allTasks.slice(0, 5);
   }
@@ -43,5 +44,13 @@ export default class TaskListStore {
 
   toggleShowAll(): void {
     this.showAll = !this.showAll;
+  }
+
+  get allTasks() {
+    return this.tasks;
+  }
+
+  get listName() {
+    return this.name;
   }
 }

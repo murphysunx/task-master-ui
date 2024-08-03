@@ -3,7 +3,6 @@ import TaskListStore from "../../stores/TaskListStore";
 import { TaskListView } from "./TaskList";
 
 const meta: Meta<typeof TaskListView> = {
-  title: "Components/TaskListView",
   component: TaskListView,
 } satisfies Meta<typeof TaskListView>;
 
@@ -14,7 +13,7 @@ type Story = StoryObj<typeof meta>;
 // Empty TaskListView
 export const EmptyTaskListView: Story = {
   args: {
-    store: new TaskListStore({ id: "1", name: "Empty Task List View" }),
+    store: new TaskListStore("Empty Task List View"),
   },
 };
 
@@ -22,10 +21,7 @@ export const EmptyTaskListView: Story = {
 export const SingleTask: Story = {
   args: {
     store: (() => {
-      const store = new TaskListStore({
-        id: "2",
-        name: "Single Task List View",
-      });
+      const store = new TaskListStore("Single Task List View");
       store.addTask({ id: "1", title: "Single Task", completed: false });
       return store;
     })(),
@@ -36,10 +32,7 @@ export const SingleTask: Story = {
 export const MultipleTasks: Story = {
   args: {
     store: (() => {
-      const store = new TaskListStore({
-        id: "3",
-        name: "Multiple Tasks List View",
-      });
+      const store = new TaskListStore("Multiple Tasks List View");
       store.addTask({ id: "1", title: "Task 1", completed: false });
       store.addTask({ id: "2", title: "Task 2", completed: false });
       store.addTask({ id: "3", title: "Task 3", completed: true });
@@ -55,10 +48,7 @@ export const MultipleTasks: Story = {
 export const TasksWithShowAll: Story = {
   args: {
     store: (() => {
-      const store = new TaskListStore({
-        id: "4",
-        name: "Tasks with Show All Button View",
-      });
+      const store = new TaskListStore("Tasks with Show All Button View");
       store.addTask({ id: "1", title: "Task 1", completed: false });
       store.addTask({ id: "2", title: "Task 2", completed: false });
       store.addTask({ id: "3", title: "Task 3", completed: false });

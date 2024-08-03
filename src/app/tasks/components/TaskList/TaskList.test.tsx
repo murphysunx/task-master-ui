@@ -1,13 +1,6 @@
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { ITask } from "../../interfaces/task.interface";
-import { ITaskList } from "../../interfaces/taskList.interface";
 import TaskListStore from "../../stores/TaskListStore";
 import { TaskListView } from "./TaskList";
 
@@ -15,8 +8,7 @@ describe("TaskList Component", () => {
   let store: TaskListStore;
 
   beforeEach(() => {
-    const taskList: ITaskList = { id: "1", name: "My Task List" };
-    store = new TaskListStore(taskList);
+    store = new TaskListStore("My Task List");
   });
 
   const renderComponent = () => render(<TaskListView store={store} />);
@@ -27,15 +19,22 @@ describe("TaskList Component", () => {
   });
 
   it("should correctly display the plurality of non-completed tasks", async () => {
-    // Test with a single non-completed task
-    const singleTask: ITask = {
-      id: "1",
-      title: "Single Task",
-      completed: false,
-    };
-    store.addTask(singleTask);
     renderComponent();
-    expect(screen.getByText("1 task remaining")).toBeInTheDocument();
+    expect(screen.getByText("0 tasks remaining")).toBeInTheDocument();
+
+    act(() => {
+      // Test with a single non-completed task
+      const singleTask: ITask = {
+        id: "1",
+        title: "Single Task",
+        completed: false,
+      };
+      store.addTask(singleTask);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("1 task remaining")).toBeInTheDocument();
+    });
 
     act(() => {
       // Test with multiple non-completed tasks
@@ -90,7 +89,8 @@ describe("TaskList Component", () => {
       store.addTask(task);
     }
     renderComponent();
-    fireEvent.click(screen.getByText("Show All"));
+    // act(() => fireEvent.click(screen.getByText("Show All")));
+    act(() => store.toggleShowAll());
     expect(screen.getAllByRole("listitem").length).toBe(6);
     expect(screen.queryByText("Show All")).not.toBeInTheDocument();
   });

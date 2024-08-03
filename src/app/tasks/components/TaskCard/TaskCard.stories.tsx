@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import TaskCard from "./task-card";
+import TaskCard from "./TaskCard";
 
 const meta = {
   component: TaskCard,
@@ -27,7 +27,6 @@ export const Completed: Story = {
       completed: true,
       description: "sflwsjlfkjsldf",
     },
-
     showDescription: false,
   },
 };
