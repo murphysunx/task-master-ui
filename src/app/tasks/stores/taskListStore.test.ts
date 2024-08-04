@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ITask } from "../interfaces/task.interface";
-import TaskListStore from "./TaskListStore";
+import TaskListStore from "./taskListStore";
 
 describe("TaskListStore", () => {
   let store: TaskListStore;
