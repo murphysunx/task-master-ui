@@ -1,6 +1,6 @@
-import React from "react";
 import { observer } from "mobx-react-lite";
-import TaskListStore from "../../stores/TaskListStore";
+import React from "react";
+import TaskListStore from "../../stores/taskListStore";
 import TaskCard from "../TaskCard/TaskCard";
 
 interface TaskListProps {
