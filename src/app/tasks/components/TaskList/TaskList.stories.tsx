@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import TaskListStore from "../../stores/TaskListStore";
+import TaskListStore from "../../stores/taskListStore";
 import { TaskListView } from "./TaskList";
 
 const meta: Meta<typeof TaskListView> = {
