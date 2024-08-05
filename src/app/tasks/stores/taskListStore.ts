@@ -2,24 +2,27 @@ import { partition } from "lodash";
 import { makeAutoObservable } from "mobx";
 import { ITask } from "../interfaces/task.interface";
 import pluralize from "@/app/utils/pluralize";
+import { createTask } from "../apis/create-task";
+import { EMPTY_LIST_MESSAGE } from "../consts/empty-list-message";
 
 export default class TaskListStore {
+  public readonly id: string | undefined;
   private name: string;
   private tasks: ITask[] = [];
   showAll: boolean = false;
 
-  constructor(name: string) {
+  constructor(name: string, taskListId?: string) {
+    this.id = taskListId;
     this.name = name;
     makeAutoObservable(this);
   }
 
-  get todoMessage() {
-    const todos = this.tasks.filter((t) => !t.completed);
-    return `${todos.length} ${pluralize(todos.length, "task", "tasks")} remaining`;
+  get todoCount() {
+    return this.tasks.filter((task) => !task.completed).length;
   }
 
   get emptyMessage(): string {
-    return this.tasks.length === 0 ? "Add your first task" : "";
+    return this.tasks.length === 0 ? EMPTY_LIST_MESSAGE : "";
   }
 
   get displayedTasks(): ITask[] {
@@ -40,6 +43,12 @@ export default class TaskListStore {
 
   addTask(task: ITask): void {
     this.tasks.push(task);
+  }
+
+  async createTask(title: string, description?: string) {
+    const created = await createTask(title, description, this.id);
+    this.addTask(created);
+    return created;
   }
 
   toggleShowAll(): void {

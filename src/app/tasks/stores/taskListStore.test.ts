@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { EMPTY_LIST_MESSAGE } from "../consts/empty-list-message";
 import { ITask } from "../interfaces/task.interface";
 import TaskListStore from "./taskListStore";
 
@@ -31,7 +32,7 @@ describe("TaskListStore", () => {
   // });
 
   it('should show a message "Add your first task" when the task list is empty', () => {
-    expect(store.emptyMessage).toBe("Add your first task");
+    expect(store.emptyMessage).toBe(EMPTY_LIST_MESSAGE);
   });
 
   it("should display only the top 5 tasks by default", () => {
@@ -102,5 +103,18 @@ describe("TaskListStore", () => {
     store.addTask(taskB);
     store.addTask(taskA);
     expect(store.displayedTasks[0].title).toBe("A Task");
+  });
+
+  it("should compute correct todo count", () => {
+    expect(store.todoCount).toBe(0);
+    for (let i = 1; i <= 6; i++) {
+      const task: ITask = {
+        id: i.toString(),
+        title: `Task ${i}`,
+        completed: false,
+      };
+      store.addTask(task);
+    }
+    expect(store.todoCount).toBe(6);
   });
 });

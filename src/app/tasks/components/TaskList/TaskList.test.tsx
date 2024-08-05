@@ -1,5 +1,11 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ITask } from "../../interfaces/task.interface";
 import TaskListStore from "../../stores/taskListStore";
 import { TaskListView } from "./TaskList";
@@ -20,7 +26,11 @@ describe("TaskList Component", () => {
 
   it("should correctly display the plurality of non-completed tasks", async () => {
     renderComponent();
-    expect(screen.getByText("0 tasks remaining")).toBeInTheDocument();
+    function getElement() {
+      return screen.queryByTestId(`${store.id}-todo-count`);
+    }
+
+    expect(getElement()?.textContent).toBe("0");
 
     act(() => {
       // Test with a single non-completed task
@@ -33,7 +43,7 @@ describe("TaskList Component", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("1 task remaining")).toBeInTheDocument();
+      expect(getElement()?.textContent).toBe("1");
     });
 
     act(() => {
@@ -44,7 +54,7 @@ describe("TaskList Component", () => {
       store.addTask(task2);
     });
     await waitFor(() => {
-      expect(screen.getByText("3 tasks remaining")).toBeInTheDocument();
+      expect(getElement()?.textContent).toBe("3");
     });
   });
 
@@ -119,5 +129,35 @@ describe("TaskList Component", () => {
     const items = screen.getAllByRole("listitem");
     expect(items[0]).toHaveTextContent("A Task");
     expect(items[1]).toHaveTextContent("B Task");
+  });
+
+  it("should have an input for add new todo in the list", () => {
+    renderComponent();
+    expect(screen.getByTestId(`${store.listName}-add-input`)).not.toBeNull();
+  });
+
+  it("should submit new todo with valid todo title", async () => {
+    vi.spyOn(store, "createTask").mockImplementationOnce(
+      async (title, desc) => {
+        const created: ITask = {
+          id: "1",
+          title,
+          description: desc,
+          completed: false,
+          listId: store.id,
+        };
+        store.addTask(created);
+        return created;
+      }
+    );
+    renderComponent();
+    const input = screen.getByTestId(`${store.listName}-add-input`);
+    act(() => {
+      fireEvent.change(input, { target: { value: "new todo" } });
+      fireEvent.submit(input);
+    });
+    await waitFor(() => {
+      expect(screen.getByText("new todo")).not.toBeNull();
+    });
   });
 });
