@@ -60,4 +60,14 @@ describe("auth store test", () => {
     expect(logout).toHaveBeenCalledOnce();
     expect(store.user).toBeNull();
   });
+
+  it("should not be able to logout when no login", async () => {
+    expect(store.logout()).rejects.toThrowError();
+  });
+
+  it("should not be able to login when logged in", async () => {
+    mockLogin.mockResolvedValueOnce(mockUser);
+    await store.login(email, password);
+    expect(store.login(email, password)).rejects.toThrowError();
+  });
 });

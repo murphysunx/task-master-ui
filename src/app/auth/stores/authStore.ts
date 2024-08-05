@@ -10,9 +10,13 @@ export default class AuthStore {
   }
 
   async login(email: string, password: string): Promise<IUser> {
-    const user = await login(email, password);
-    this.currentUser = user;
-    return user;
+    if (!this.currentUser) {
+      const user = await login(email, password);
+      this.currentUser = user;
+      return user;
+    } else {
+      throw new Error("already logged in");
+    }
   }
 
   async logout(): Promise<void> {
