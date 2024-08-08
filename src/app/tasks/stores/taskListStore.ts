@@ -1,17 +1,17 @@
 import { partition } from "lodash";
 import { makeAutoObservable } from "mobx";
-import { ITask } from "../interfaces/task.interface";
-import pluralize from "@/app/utils/pluralize";
 import { createTask } from "../apis/create-task";
+import { DEFAULT_MAX_TASK_LIST_ITEM } from "../consts/default-max-task-list-item";
 import { EMPTY_LIST_MESSAGE } from "../consts/empty-list-message";
+import { ITask } from "../interfaces/task.interface";
 
 export default class TaskListStore {
-  public readonly id: string | undefined;
+  public readonly id: number | undefined;
   private name: string;
   private tasks: ITask[] = [];
   showAll: boolean = false;
 
-  constructor(name: string, taskListId?: string) {
+  constructor(name: string, taskListId?: number) {
     this.id = taskListId;
     this.name = name;
     makeAutoObservable(this);
@@ -34,11 +34,13 @@ export default class TaskListStore {
       (task) => !task.completed
     );
     const allTasks = [...nonCompletedTasks, ...completedTasks];
-    return this.showAll ? allTasks : allTasks.slice(0, 5);
+    return this.showAll
+      ? allTasks
+      : allTasks.slice(0, DEFAULT_MAX_TASK_LIST_ITEM);
   }
 
   get showAllButtonVisible(): boolean {
-    return this.tasks.length > 5 && !this.showAll;
+    return this.tasks.length > DEFAULT_MAX_TASK_LIST_ITEM && !this.showAll;
   }
 
   addTask(task: ITask): void {

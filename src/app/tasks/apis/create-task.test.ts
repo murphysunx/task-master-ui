@@ -14,7 +14,7 @@ describe("create-task", () => {
       ok: true,
       json: () =>
         Promise.resolve({
-          id: "1",
+          id: 1,
           title: taskName,
           description: taskDescription,
           completed: false,

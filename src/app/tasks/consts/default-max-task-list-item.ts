@@ -1,0 +1,1 @@
+export const DEFAULT_MAX_TASK_LIST_ITEM = 5;

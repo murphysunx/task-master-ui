@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { ITask } from "../interfaces/task.interface";
 
 export default class Task implements ITask {
-  id!: string;
+  id!: number;
   title!: string;
   description?: string | undefined;
   completed?: boolean | undefined;

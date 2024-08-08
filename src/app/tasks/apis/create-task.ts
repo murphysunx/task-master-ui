@@ -2,16 +2,16 @@ import { ITask } from "../interfaces/task.interface";
 
 export const CREATE_TASK_ENDPOINT_BASE = "http://localhost:3000/tasks/";
 
-function generateCreateTaskEndpoint(taskListId?: string) {
-  return taskListId
-    ? CREATE_TASK_ENDPOINT_BASE + taskListId
-    : CREATE_TASK_ENDPOINT_BASE;
+function generateCreateTaskEndpoint(taskListId?: number) {
+  return taskListId === void 0
+    ? CREATE_TASK_ENDPOINT_BASE
+    : CREATE_TASK_ENDPOINT_BASE + taskListId;
 }
 
 export async function createTask(
   title: string,
   description?: string,
-  taskListId?: string
+  taskListId?: number
 ) {
   const endpoint = generateCreateTaskEndpoint(taskListId);
   const response = await fetch(endpoint, {

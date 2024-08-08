@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import TaskListStore from "../../stores/taskListStore";
 import { TaskListView } from "./TaskList";
+import { generateMockTasks } from "../../mocks/generate-mock-task";
 
 const meta: Meta<typeof TaskListView> = {
   component: TaskListView,
@@ -22,7 +23,7 @@ export const SingleTask: Story = {
   args: {
     store: (() => {
       const store = new TaskListStore("Single Task List View");
-      store.addTask({ id: "1", title: "Single Task", completed: false });
+      store.addTask({ id: 1, title: "Single Task", completed: false });
       return store;
     })(),
   },
@@ -33,12 +34,8 @@ export const MultipleTasks: Story = {
   args: {
     store: (() => {
       const store = new TaskListStore("Multiple Tasks List View");
-      store.addTask({ id: "1", title: "Task 1", completed: false });
-      store.addTask({ id: "2", title: "Task 2", completed: false });
-      store.addTask({ id: "3", title: "Task 3", completed: true });
-      store.addTask({ id: "4", title: "Task 4", completed: false });
-      store.addTask({ id: "5", title: "Task 5", completed: true });
-      store.addTask({ id: "6", title: "Task 6", completed: false });
+      const tasks = generateMockTasks(6);
+      tasks.forEach((t) => store.addTask(t));
       return store;
     })(),
   },
@@ -49,13 +46,8 @@ export const TasksWithShowAll: Story = {
   args: {
     store: (() => {
       const store = new TaskListStore("Tasks with Show All Button View");
-      store.addTask({ id: "1", title: "Task 1", completed: false });
-      store.addTask({ id: "2", title: "Task 2", completed: false });
-      store.addTask({ id: "3", title: "Task 3", completed: false });
-      store.addTask({ id: "4", title: "Task 4", completed: false });
-      store.addTask({ id: "5", title: "Task 5", completed: false });
-      store.addTask({ id: "6", title: "Task 6", completed: false });
-      store.addTask({ id: "7", title: "Task 7", completed: false });
+      const tasks = generateMockTasks(7);
+      tasks.forEach((t) => store.addTask(t));
       return store;
     })(),
   },

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import TaskCard from "./TaskCard";
+import TaskListItem from "./TaskListItem";
 
 const meta = {
-  component: TaskCard,
-} satisfies Meta<typeof TaskCard>;
+  component: TaskListItem,
+} satisfies Meta<typeof TaskListItem>;
 
 export default meta;
 

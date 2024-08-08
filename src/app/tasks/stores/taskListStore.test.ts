@@ -19,7 +19,7 @@ describe("TaskListStore", () => {
   });
 
   it("should add a task to the task list", () => {
-    const task: ITask = { id: "1", title: "Task 1", completed: false };
+    const task: ITask = { id: 1, title: "Task 1", completed: false };
     store.addTask(task);
     expect(store.allTasks.length).toBe(1);
     expect(store.allTasks[0].title).toBe("Task 1");
@@ -38,7 +38,7 @@ describe("TaskListStore", () => {
   it("should display only the top 5 tasks by default", () => {
     for (let i = 1; i <= 6; i++) {
       const task: ITask = {
-        id: i.toString(),
+        id: i,
         title: `Task ${i}`,
         completed: false,
       };
@@ -50,7 +50,7 @@ describe("TaskListStore", () => {
   it('should display a "show all" button if there are more than 5 tasks', () => {
     for (let i = 1; i <= 6; i++) {
       const task: ITask = {
-        id: i.toString(),
+        id: i,
         title: `Task ${i}`,
         completed: false,
       };
@@ -62,7 +62,7 @@ describe("TaskListStore", () => {
   it('should show all tasks after clicking the "show all" button', () => {
     for (let i = 1; i <= 6; i++) {
       const task: ITask = {
-        id: i.toString(),
+        id: i,
         title: `Task ${i}`,
         completed: false,
       };
@@ -75,7 +75,7 @@ describe("TaskListStore", () => {
   it('should hide the "show all" button after clicking it', () => {
     for (let i = 1; i <= 6; i++) {
       const task: ITask = {
-        id: i.toString(),
+        id: i,
         title: `Task ${i}`,
         completed: false,
       };
@@ -86,9 +86,9 @@ describe("TaskListStore", () => {
   });
 
   it("should display non-completed tasks prior to the completed ones", () => {
-    const completedTask: ITask = { id: "1", title: "Task 1", completed: true };
+    const completedTask: ITask = { id: 1, title: "Task 1", completed: true };
     const nonCompletedTask: ITask = {
-      id: "2",
+      id: 2,
       title: "Task 2",
       completed: false,
     };
@@ -98,8 +98,8 @@ describe("TaskListStore", () => {
   });
 
   it("should sort tasks by title in ascending order by default", () => {
-    const taskB: ITask = { id: "1", title: "B Task", completed: false };
-    const taskA: ITask = { id: "2", title: "A Task", completed: false };
+    const taskB: ITask = { id: 1, title: "B Task", completed: false };
+    const taskA: ITask = { id: 2, title: "A Task", completed: false };
     store.addTask(taskB);
     store.addTask(taskA);
     expect(store.displayedTasks[0].title).toBe("A Task");
@@ -109,7 +109,7 @@ describe("TaskListStore", () => {
     expect(store.todoCount).toBe(0);
     for (let i = 1; i <= 6; i++) {
       const task: ITask = {
-        id: i.toString(),
+        id: i,
         title: `Task ${i}`,
         completed: false,
       };
