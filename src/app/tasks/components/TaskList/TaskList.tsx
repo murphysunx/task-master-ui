@@ -13,7 +13,6 @@ export const TaskListView: React.FC<TaskListProps> = observer(({ store }) => {
   const [draftTaskTitle, setDraftTaskTitle] = useState("");
 
   const submit = async () => {
-    console.log("submit");
     if (draftTaskTitle.length > 0) {
       await store.createTask(draftTaskTitle);
       setDraftTaskTitle("");
