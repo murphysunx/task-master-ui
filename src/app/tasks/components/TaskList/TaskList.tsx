@@ -1,15 +1,15 @@
 import { Input } from "@headlessui/react";
+import { clsx } from "clsx";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import TaskListStore from "../../stores/taskListStore";
 import TaskListItem from "../TaskListItem/TaskListItem";
-import { clsx } from "clsx";
 
 interface TaskListProps {
   store: TaskListStore;
 }
 
-export const TaskListView: React.FC<TaskListProps> = observer(({ store }) => {
+const TaskListView: React.FC<TaskListProps> = ({ store }) => {
   const [draftTaskTitle, setDraftTaskTitle] = useState("");
 
   const submit = async () => {
@@ -80,4 +80,6 @@ export const TaskListView: React.FC<TaskListProps> = observer(({ store }) => {
       )}
     </div>
   );
-});
+};
+
+export default observer(TaskListView);

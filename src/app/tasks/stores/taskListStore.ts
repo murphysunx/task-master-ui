@@ -1,8 +1,8 @@
 import { partition } from "lodash";
 import { makeAutoObservable } from "mobx";
-import { createTask } from "../apis/create-task";
-import { DEFAULT_MAX_TASK_LIST_ITEM } from "../consts/default-max-task-list-item";
-import { EMPTY_LIST_MESSAGE } from "../consts/empty-list-message";
+import { createTask } from "../apis/createTask/createTask";
+import { DEFAULT_MAX_TASK_LIST_ITEM } from "../consts/DEFAULT_MAX_TASK_LIST_ITEM";
+import { EMPTY_LIST_MESSAGE } from "../consts/EMPTY_LIST_MESSAGE";
 import { ITask } from "../interfaces/task.interface";
 
 export default class TaskListStore {

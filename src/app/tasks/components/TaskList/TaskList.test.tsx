@@ -6,11 +6,11 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { EMPTY_LIST_MESSAGE } from "../../consts/empty-list-message";
+import { DEFAULT_MAX_TASK_LIST_ITEM } from "../../consts/DEFAULT_MAX_TASK_LIST_ITEM";
+import { EMPTY_LIST_MESSAGE } from "../../consts/EMPTY_LIST_MESSAGE";
 import { ITask } from "../../interfaces/task.interface";
 import TaskListStore from "../../stores/taskListStore";
-import { TaskListView } from "./TaskList";
-import { DEFAULT_MAX_TASK_LIST_ITEM } from "../../consts/default-max-task-list-item";
+import TaskListView from "./TaskList";
 
 describe("TaskList Component", () => {
   let store: TaskListStore;

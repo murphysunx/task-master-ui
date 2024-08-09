@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { EMPTY_LIST_MESSAGE } from "../consts/empty-list-message";
+import { EMPTY_LIST_MESSAGE } from "../consts/EMPTY_LIST_MESSAGE";
 import { ITask } from "../interfaces/task.interface";
 import TaskListStore from "./taskListStore";
 
