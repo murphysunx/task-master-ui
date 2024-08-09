@@ -25,12 +25,6 @@ describe("TaskListStore", () => {
     expect(store.allTasks[0].title).toBe("Task 1");
   });
 
-  // it("should increment the count of non-completed tasks when a new task is added", () => {
-  //   const task: ITask = { id: "1", title: "Task 1", completed: false };
-  //   store.addTask(task);
-  //   expect(store.nonCompletedTasksCount).toBe(1);
-  // });
-
   it('should show a message "Add your first task" when the task list is empty', () => {
     expect(store.emptyMessage).toBe(EMPTY_LIST_MESSAGE);
   });

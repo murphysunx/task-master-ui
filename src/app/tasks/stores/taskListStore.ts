@@ -1,6 +1,5 @@
 import { partition } from "lodash";
 import { makeAutoObservable } from "mobx";
-import { createTask } from "../apis/createTask/createTask";
 import { DEFAULT_MAX_TASK_LIST_ITEM } from "../consts/DEFAULT_MAX_TASK_LIST_ITEM";
 import { EMPTY_LIST_MESSAGE } from "../consts/EMPTY_LIST_MESSAGE";
 import { ITask } from "../interfaces/task.interface";
@@ -10,6 +9,8 @@ export default class TaskListStore {
   private name: string;
   private tasks: ITask[] = [];
   showAll: boolean = false;
+
+  error?: string;
 
   constructor(name: string, taskListId?: number) {
     this.id = taskListId;
@@ -44,13 +45,43 @@ export default class TaskListStore {
   }
 
   addTask(task: ITask): void {
-    this.tasks.push(task);
+    const existing = this.tasks.find((t) => t.id === task.id);
+    if (existing) {
+      // merge task
+      existing.title = task.title;
+      existing.description = task.description;
+      existing.completed = task.completed;
+    } else {
+      this.tasks.push(task);
+    }
+  }
+
+  async loadTasksFromServer(): Promise<void> {
+    const response = await fetch("/api/tasks", { method: "get" });
+    if (response.ok) {
+      const tasks: ITask[] = await response.json();
+      tasks.forEach((task) => this.addTask(task));
+    } else {
+      this.error = "Fail to load tasks from the server";
+    }
   }
 
   async createTask(title: string, description?: string) {
-    const created = await createTask(title, description, this.id);
-    this.addTask(created);
-    return created;
+    const response = await fetch("/api/tasks", {
+      method: "post",
+      body: JSON.stringify({
+        title,
+        description,
+        taskListId: this.id,
+      }),
+    });
+    if (response.ok) {
+      const createdTask: ITask = await response.json();
+      this.addTask(createdTask);
+      return createdTask;
+    } else {
+      this.error = "Fail to create the new task";
+    }
   }
 
   toggleShowAll(): void {
