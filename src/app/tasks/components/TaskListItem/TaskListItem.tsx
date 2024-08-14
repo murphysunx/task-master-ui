@@ -15,7 +15,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({
   return (
     <div className="hover:bg-sky-700 shadow-md p-4 border-b border-solid border-gray-700 flex items-center gap-2 ">
       <Checkbox
-        checked={!!task.completed}
+        isChecked={!!task.completed}
         onChange={(_) => task.toggle()}
         className="group block size-4 rounded border bg-white data-[checked]:bg-blue-500"
       />
