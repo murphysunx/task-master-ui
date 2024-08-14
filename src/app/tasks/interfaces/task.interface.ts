@@ -5,3 +5,7 @@ export interface ITask {
   completed?: boolean;
   listId?: number;
 }
+
+export interface Toggleable {
+  toggle(): void;
+}

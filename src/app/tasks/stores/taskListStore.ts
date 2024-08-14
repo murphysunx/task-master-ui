@@ -3,11 +3,12 @@ import { makeAutoObservable } from "mobx";
 import { DEFAULT_MAX_TASK_LIST_ITEM } from "../consts/DEFAULT_MAX_TASK_LIST_ITEM";
 import { EMPTY_LIST_MESSAGE } from "../consts/EMPTY_LIST_MESSAGE";
 import { ITask } from "../interfaces/task.interface";
+import Task from "../models/task";
 
 export default class TaskListStore {
   public readonly id: number | undefined;
   private name: string;
-  private tasks: ITask[] = [];
+  private tasks: Task[] = [];
   showAll: boolean = false;
 
   error?: string;
@@ -26,7 +27,7 @@ export default class TaskListStore {
     return this.tasks.length === 0 ? EMPTY_LIST_MESSAGE : "";
   }
 
-  get displayedTasks(): ITask[] {
+  get displayedTasks(): Task[] {
     const sortedTasks = this.tasks
       .slice()
       .sort((a, b) => a.title.localeCompare(b.title));
@@ -52,7 +53,7 @@ export default class TaskListStore {
       existing.description = task.description;
       existing.completed = task.completed;
     } else {
-      this.tasks.push(task);
+      this.tasks.push(new Task(task));
     }
   }
 

@@ -32,15 +32,21 @@ describe("TaskListItem", () => {
 
   it("should not show the task description by default", () => {
     render(<TaskListItem task={taskWithDescription} />);
-    const descriptionElement = queryTaskDescriptionElement(taskWithDescription.id);
+    const descriptionElement = queryTaskDescriptionElement(
+      taskWithDescription.id
+    );
     expect(descriptionElement).toBeNull();
   });
 
   it("should show the task description when showDescription is true and task has description", () => {
     render(<TaskListItem task={taskWithDescription} showDescription={true} />);
-    const descriptionElement = queryTaskDescriptionElement(taskWithDescription.id);
+    const descriptionElement = queryTaskDescriptionElement(
+      taskWithDescription.id
+    );
     expect(descriptionElement).not.toBeNull();
-    expect(descriptionElement).toHaveTextContent(taskWithDescription.description!);
+    expect(descriptionElement).toHaveTextContent(
+      taskWithDescription.description!
+    );
   });
 
   it("should not show the task description when showDescription is true and task has no description", () => {
@@ -51,13 +57,17 @@ describe("TaskListItem", () => {
     render(
       <TaskListItem task={taskWithoutDescription} showDescription={true} />
     );
-    const descriptionElement = queryTaskDescriptionElement(taskWithDescription.id);
+    const descriptionElement = queryTaskDescriptionElement(
+      taskWithDescription.id
+    );
     expect(descriptionElement).toBeNull();
   });
 
   it("should not display the task description when showDescription prop is false", () => {
     render(<TaskListItem task={taskWithDescription} showDescription={false} />);
-    const descriptionElement = queryTaskDescriptionElement(taskWithDescription.id);
+    const descriptionElement = queryTaskDescriptionElement(
+      taskWithDescription.id
+    );
     expect(descriptionElement).toBeNull();
   });
 });
