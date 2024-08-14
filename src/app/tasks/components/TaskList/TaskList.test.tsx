@@ -150,39 +150,9 @@ describe("TaskList Component", () => {
     expect(items[1]).toHaveTextContent("B Task");
   });
 
-  it("should have an input for add new todo in the list", () => {
+  it("should include a form", () => {
     renderComponent();
-    const addInput = queryListAddInput(store.listName);
-    expect(addInput).not.toBeNull();
-  });
-
-  it("should submit new todo with valid todo title", async () => {
-    const mockTaskId = 1;
-    vi.spyOn(store, "createTask").mockImplementationOnce(
-      async (title, desc) => {
-        const created: ITask = {
-          id: mockTaskId,
-          title,
-          description: desc,
-          completed: false,
-          listId: store.id,
-        };
-        store.addTask(created);
-        return created;
-      }
-    );
-    renderComponent();
-    const addInput = queryListAddInput(store.listName);
-    expect(addInput).not.toBeNull();
-    const newTodoTitle = "new todo";
-    act(() => {
-      fireEvent.change(addInput!, { target: { value: newTodoTitle } });
-      fireEvent.submit(addInput!);
-    });
-    await waitFor(() => {
-      const newTodoListItem = queryTaskListItem(store.listName, mockTaskId);
-      expect(newTodoListItem).not.toBeNull();
-      expect(newTodoListItem).toHaveTextContent(newTodoTitle);
-    });
+    const form = screen.queryByTestId(`${store.listName}-form`);
+    expect(form).not.toBeNull();
   });
 });

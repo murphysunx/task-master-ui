@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
-import TaskListStore from "../../stores/taskListStore";
-import { TaskListView } from "./TaskList";
 import { generateMockTasks } from "../../mocks/generate-mock-task";
+import TaskListStore from "../../stores/taskListStore";
+import TaskListView from "./TaskList";
 
 const meta: Meta<typeof TaskListView> = {
   component: TaskListView,

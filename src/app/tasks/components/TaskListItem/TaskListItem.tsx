@@ -1,4 +1,4 @@
-import { Checkbox } from "@headlessui/react";
+import { Checkbox } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { ITask, Toggleable } from "../../interfaces/task.interface";
@@ -15,7 +15,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({
   return (
     <div className="hover:bg-sky-700 shadow-md p-4 border-b border-solid border-gray-700 flex items-center gap-2 ">
       <Checkbox
-        checked={task.completed}
+        checked={!!task.completed}
         onChange={(_) => task.toggle()}
         className="group block size-4 rounded border bg-white data-[checked]:bg-blue-500"
       />

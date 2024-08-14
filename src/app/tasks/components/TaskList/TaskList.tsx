@@ -1,8 +1,7 @@
-import { Input } from "@headlessui/react";
-import { clsx } from "clsx";
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import React from "react";
 import TaskListStore from "../../stores/taskListStore";
+import TaskListForm from "../TaskListForm/TaskListForm";
 import TaskListItem from "../TaskListItem/TaskListItem";
 
 interface TaskListProps {
@@ -10,15 +9,6 @@ interface TaskListProps {
 }
 
 const TaskListView: React.FC<TaskListProps> = ({ store }) => {
-  const [draftTaskTitle, setDraftTaskTitle] = useState("");
-
-  const submit = async () => {
-    if (draftTaskTitle.length > 0) {
-      await store.createTask(draftTaskTitle);
-      setDraftTaskTitle("");
-    }
-  };
-
   return (
     <div>
       <div className="mb-4">
@@ -33,23 +23,7 @@ const TaskListView: React.FC<TaskListProps> = ({ store }) => {
             {store.todoCount}
           </div>
         </div>
-        <form onSubmit={submit}>
-          <Input
-            data-testid={`${store.listName}-add-input`}
-            name="full_name"
-            type="text"
-            className={clsx(
-              "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-gray-800",
-              "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
-            )}
-            placeholder="+ Add task"
-            onChange={(event) => {
-              event.preventDefault();
-              setDraftTaskTitle(event.target.value);
-            }}
-          />
-          <input type="submit" hidden />
-        </form>
+        <TaskListForm store={store} />
       </div>
       <div className="mb-2">
         {store.allTasks.length === 0 ? (
