@@ -73,7 +73,7 @@ export default class TaskListStore {
       body: JSON.stringify({
         title,
         description,
-        taskListId: this.id,
+        userId: 1,
       }),
     });
     if (response.ok) {
