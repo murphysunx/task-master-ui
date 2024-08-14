@@ -4,8 +4,8 @@ import { ITask, Toggleable } from "../interfaces/task.interface";
 export default class Task implements ITask, Toggleable {
   id!: number;
   title!: string;
-  description?: string | undefined;
-  completed?: boolean | undefined;
+  description?: string | null = null;
+  completed?: boolean | null = null;
 
   constructor(task: ITask) {
     Object.assign(this, task);

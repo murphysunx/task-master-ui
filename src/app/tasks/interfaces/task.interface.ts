@@ -1,9 +1,9 @@
 export interface ITask {
   id: number;
   title: string;
-  description?: string;
-  completed?: boolean;
-  listId?: number;
+  description?: string | null;
+  completed?: boolean | null;
+  listId?: number | null;
 }
 
 export interface Toggleable {
