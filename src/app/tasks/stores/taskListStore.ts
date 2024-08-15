@@ -57,6 +57,11 @@ export default class TaskListStore {
     }
   }
 
+  async deleteTask(task: Task) {
+    await task.delete();
+    this.tasks = this.tasks.filter((t) => t.id !== task.id);
+  }
+
   async loadTasksFromServer(): Promise<void> {
     const response = await fetch("/api/tasks", { method: "get" });
     if (response.ok) {

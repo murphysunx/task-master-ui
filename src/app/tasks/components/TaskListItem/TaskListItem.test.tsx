@@ -1,9 +1,17 @@
-import { render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import Task from "../../models/task";
+import TaskListStore from "../../stores/taskListStore";
 import TaskListItem from "./TaskListItem";
 
 describe("TaskListItem", () => {
+  let store: TaskListStore;
   let taskWithDescription: Task;
 
   function queryTaskTitleElement(taskId: number) {
@@ -14,24 +22,30 @@ describe("TaskListItem", () => {
     return screen.queryByTestId(`task-${taskId}-description`);
   }
 
+  function queryTaskDeleteButton(taskId: number) {
+    return screen.queryByTestId(`task-${taskId}-delete-button`);
+  }
+
   beforeEach(() => {
+    store = new TaskListStore("All");
     taskWithDescription = new Task({
       id: 1,
       title: "Test Task",
       description: "This is a test task description",
       completed: false,
     });
+    store.addTask(taskWithDescription);
   });
 
   it("should display the task title", () => {
-    render(<TaskListItem task={taskWithDescription} />);
+    render(<TaskListItem listStore={store} task={taskWithDescription} />);
     const titleElement = queryTaskTitleElement(taskWithDescription.id);
     expect(titleElement).not.toBeNull();
     expect(titleElement).toHaveTextContent(taskWithDescription.title);
   });
 
   it("should not show the task description by default", () => {
-    render(<TaskListItem task={taskWithDescription} />);
+    render(<TaskListItem listStore={store} task={taskWithDescription} />);
     const descriptionElement = queryTaskDescriptionElement(
       taskWithDescription.id
     );
@@ -39,7 +53,13 @@ describe("TaskListItem", () => {
   });
 
   it("should show the task description when showDescription is true and task has description", () => {
-    render(<TaskListItem task={taskWithDescription} showDescription={true} />);
+    render(
+      <TaskListItem
+        listStore={store}
+        task={taskWithDescription}
+        showDescription={true}
+      />
+    );
     const descriptionElement = queryTaskDescriptionElement(
       taskWithDescription.id
     );
@@ -55,7 +75,11 @@ describe("TaskListItem", () => {
       title: "Task with no description",
     });
     render(
-      <TaskListItem task={taskWithoutDescription} showDescription={true} />
+      <TaskListItem
+        listStore={store}
+        task={taskWithoutDescription}
+        showDescription={true}
+      />
     );
     const descriptionElement = queryTaskDescriptionElement(
       taskWithDescription.id
@@ -64,10 +88,35 @@ describe("TaskListItem", () => {
   });
 
   it("should not display the task description when showDescription prop is false", () => {
-    render(<TaskListItem task={taskWithDescription} showDescription={false} />);
+    render(
+      <TaskListItem
+        listStore={store}
+        task={taskWithDescription}
+        showDescription={false}
+      />
+    );
     const descriptionElement = queryTaskDescriptionElement(
       taskWithDescription.id
     );
     expect(descriptionElement).toBeNull();
+  });
+
+  it("should delete a task", async () => {
+    vi.spyOn(store, "deleteTask");
+    vi.spyOn(taskWithDescription, "delete").mockResolvedValue();
+    render(<TaskListItem listStore={store} task={taskWithDescription} />);
+    const deleteButton = queryTaskDeleteButton(taskWithDescription.id);
+    expect(deleteButton).not.toBeNull();
+    expect(
+      store.allTasks.find((t) => t.id === taskWithDescription.id)
+    ).toBeTruthy();
+    act(() => fireEvent.click(deleteButton!));
+    expect(store.deleteTask).toHaveBeenCalledWith(taskWithDescription);
+    expect(taskWithDescription.delete).toHaveBeenCalledOnce();
+    await waitFor(() =>
+      expect(
+        store.allTasks.find((t) => t.id === taskWithDescription.id)
+      ).toBeFalsy()
+    );
   });
 });

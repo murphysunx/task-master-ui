@@ -1,25 +1,30 @@
-import { Checkbox } from "@chakra-ui/react";
+import { CloseIcon } from "@chakra-ui/icons";
+import { Checkbox, IconButton } from "@chakra-ui/react";
+
 import { observer } from "mobx-react-lite";
 import React from "react";
-import { ITask, Toggleable } from "../../interfaces/task.interface";
+import Task from "../../models/task";
+import TaskListStore from "../../stores/taskListStore";
 
 interface TaskListItemProps {
-  task: ITask & Toggleable;
+  listStore: TaskListStore;
+  task: Task;
   showDescription?: boolean;
 }
 
 const TaskListItem: React.FC<TaskListItemProps> = ({
+  listStore,
   task,
   showDescription = false,
 }) => {
   return (
-    <div className="hover:bg-sky-700 shadow-md p-4 border-b border-solid border-gray-700 flex items-center gap-2 ">
+    <div className="hover:bg-sky-100 shadow-md p-4 border-b border-solid border-gray-700 flex items-center gap-2 ">
       <Checkbox
         isChecked={!!task.completed}
         onChange={(_) => task.toggle()}
-        className="group block size-4 rounded border bg-white data-[checked]:bg-blue-500"
+        size="lg"
       />
-      <div className="flex flex-col ">
+      <div className="flex-grow">
         <h2
           className="text-lg font-semibold text-gray-800"
           data-testid={`task-${task.id}-title`}
@@ -35,6 +40,16 @@ const TaskListItem: React.FC<TaskListItemProps> = ({
           </p>
         )}
       </div>
+      <IconButton
+        data-testid={`task-${task.id}-delete-button`}
+        className="hover:text-red-600"
+        aria-label="Delete Task"
+        variant="ghost"
+        icon={<CloseIcon />}
+        onClick={($event) => {
+          listStore.deleteTask(task);
+        }}
+      />
     </div>
   );
 };

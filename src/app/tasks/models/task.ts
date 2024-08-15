@@ -21,7 +21,16 @@ export default class Task implements ITask, Toggleable {
       body: JSON.stringify(payload),
     })
       .then((response) => response.json())
-      .then((data) => console.log(`updated task`, data));
+      .then((data) => console.log(`updated task`, data))
+      .catch((reason) => console.error(`fail to toggle task`));
+  }
+
+  delete() {
+    return fetch(`/api/tasks/${this.id}`, {
+      method: "DELETE",
+    }).catch((reason) => {
+      console.error("fail to delete task");
+    });
   }
 
   toPlain(): ITask {

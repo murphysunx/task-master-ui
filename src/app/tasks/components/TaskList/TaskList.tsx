@@ -35,7 +35,7 @@ const TaskListView: React.FC<TaskListProps> = ({ store }) => {
             <ul>
               {store.displayedTasks.map((task) => (
                 <li key={task.id} data-testid={`${store.listName}-${task.id}`}>
-                  <TaskListItem task={task} />
+                  <TaskListItem listStore={store} task={task} />
                 </li>
               ))}
             </ul>
