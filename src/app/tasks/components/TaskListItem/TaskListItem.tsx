@@ -18,12 +18,23 @@ const TaskListItem: React.FC<TaskListItemProps> = ({
   showDescription = false,
 }) => {
   return (
-    <div className="hover:bg-sky-100 shadow-md p-4 border-b border-solid border-gray-700 flex items-center gap-2 ">
-      <Checkbox
-        isChecked={!!task.completed}
-        onChange={(_) => task.toggle()}
-        size="lg"
-      />
+    <div
+      data-testid={`task-${task.id}-container`}
+      className="hover:bg-sky-100 shadow-md p-4 border-b border-solid border-gray-700 flex items-center gap-2"
+      onClick={($event) => {
+        listStore.focusTask(task);
+      }}
+    >
+      {/* need to wrap checkbox in a div because needs to stop click event propagation */}
+      <div onClick={($event) => $event.stopPropagation()}>
+        <Checkbox
+          isChecked={!!task.completed}
+          onChange={($event) => {
+            task.toggle();
+          }}
+          size="lg"
+        />
+      </div>
       <div className="flex-grow">
         <h2
           className="text-lg font-semibold text-gray-800"

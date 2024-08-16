@@ -21,7 +21,6 @@ export default class Task implements ITask, Toggleable {
       body: JSON.stringify(payload),
     })
       .then((response) => response.json())
-      .then((data) => console.log(`updated task`, data))
       .catch((reason) => console.error(`fail to toggle task`));
   }
 

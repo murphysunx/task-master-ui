@@ -3,7 +3,6 @@ import { TASK_ENDPOINT } from "../../tasks/consts/TASK_ENDPOINT";
 import { ITask } from "../../tasks/interfaces/task.interface";
 
 export async function GET(request: Request) {
-  console.log("GET ALL tasks");
   const response = await fetch(
     `${TASK_ENDPOINT}?${new URLSearchParams({ userId: "1" })}`,
     {

@@ -26,6 +26,10 @@ describe("TaskListItem", () => {
     return screen.queryByTestId(`task-${taskId}-delete-button`);
   }
 
+  function queryTaskContainer(taskId: number) {
+    return screen.queryByTestId(`task-${taskId}-container`);
+  }
+
   beforeEach(() => {
     store = new TaskListStore("All");
     taskWithDescription = new Task({
@@ -117,6 +121,19 @@ describe("TaskListItem", () => {
       expect(
         store.allTasks.find((t) => t.id === taskWithDescription.id)
       ).toBeFalsy()
+    );
+  });
+
+  it("should focus a task after clicking the task", async () => {
+    render(<TaskListItem listStore={store} task={taskWithDescription} />);
+    const container = queryTaskContainer(taskWithDescription.id);
+    expect(container).not.toBeNull();
+    expect(store.focusedTask).toBeNull();
+    act(() => {
+      fireEvent.click(container!);
+    });
+    await waitFor(() =>
+      expect(store.focusedTask === taskWithDescription).toBeTruthy()
     );
   });
 });

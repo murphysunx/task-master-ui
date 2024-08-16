@@ -10,6 +10,7 @@ export default class TaskListStore {
   private name: string;
   private tasks: Task[] = [];
   showAll: boolean = false;
+  private focus: Task | null = null;
 
   error?: string;
 
@@ -100,5 +101,13 @@ export default class TaskListStore {
 
   get listName() {
     return this.name;
+  }
+
+  focusTask(task: Task) {
+    this.focus = task;
+  }
+
+  get focusedTask() {
+    return this.focus;
   }
 }

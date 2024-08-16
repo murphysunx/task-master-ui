@@ -111,4 +111,15 @@ describe("TaskListStore", () => {
     }
     expect(store.todoCount).toBe(6);
   });
+
+  it("should focus a task", () => {
+    const taskB: ITask = { id: 1, title: "B Task", completed: false };
+    const taskA: ITask = { id: 2, title: "A Task", completed: false };
+    store.addTask(taskB);
+    store.addTask(taskA);
+    const [task] = store.allTasks;
+    expect(store.focusedTask).toBeNull();
+    store.focusTask(task);
+    expect(store.focusedTask === task).toBeTruthy();
+  });
 });
