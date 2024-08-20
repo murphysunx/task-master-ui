@@ -1,11 +1,11 @@
 import { makeAutoObservable } from "mobx";
 import { ITask, Toggleable } from "../interfaces/task.interface";
 
-export default class Task implements ITask, Toggleable {
+export default class Task implements Toggleable {
   id!: number;
   title!: string;
-  description?: string | null = null;
-  completed?: boolean | null = null;
+  description: string | null = null;
+  completed: boolean | null = null;
 
   constructor(task: ITask) {
     Object.assign(this, task);
@@ -14,14 +14,7 @@ export default class Task implements ITask, Toggleable {
 
   toggle() {
     this.completed = !this.completed;
-    const payload = this.toPlain();
-    // sync
-    fetch(`/api/tasks/${this.id}`, {
-      method: "PATCH",
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .catch((reason) => console.error(`fail to toggle task`));
+    return this.patchTask({ completed: this.completed });
   }
 
   delete() {
@@ -32,12 +25,18 @@ export default class Task implements ITask, Toggleable {
     });
   }
 
-  toPlain(): ITask {
-    return {
-      id: this.id,
-      title: this.title,
-      description: this.description,
-      completed: this.completed,
-    };
+  updateTitle(newTitle: string) {
+    this.title = newTitle;
+    return this.patchTask({ title: newTitle });
+  }
+
+  private patchTask(payload: Omit<Partial<ITask>, "id">): Promise<ITask> {
+    // sync
+    return fetch(`/api/tasks/${this.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .catch((reason) => console.error(`fail to update task`));
   }
 }

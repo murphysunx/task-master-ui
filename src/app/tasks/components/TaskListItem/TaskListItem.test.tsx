@@ -32,13 +32,13 @@ describe("TaskListItem", () => {
 
   beforeEach(() => {
     store = new TaskListStore("All");
-    taskWithDescription = new Task({
+    store.addTask({
       id: 1,
       title: "Test Task",
       description: "This is a test task description",
       completed: false,
     });
-    store.addTask(taskWithDescription);
+    [taskWithDescription] = store.allTasks;
   });
 
   it("should display the task title", () => {

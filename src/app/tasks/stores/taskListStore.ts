@@ -51,8 +51,8 @@ export default class TaskListStore {
     if (existing) {
       // merge task
       existing.title = task.title;
-      existing.description = task.description;
-      existing.completed = task.completed;
+      existing.description = task.description || null;
+      existing.completed = task.completed || null;
     } else {
       this.tasks.push(new Task(task));
     }

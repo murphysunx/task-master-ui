@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test": "vitest",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "theme": "chakra-cli tokens src/theme/index.ts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -29,6 +30,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^2.4.1",
     "@chromatic-com/storybook": "^1.6.1",
     "@faker-js/faker": "^8.4.1",
     "@storybook/addon-essentials": "^8.2.6",

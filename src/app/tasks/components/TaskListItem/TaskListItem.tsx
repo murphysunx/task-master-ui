@@ -5,6 +5,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import Task from "../../models/task";
 import TaskListStore from "../../stores/taskListStore";
+import EditableTaskTitle from "../EditableTaskTitle/EditableTaskTitle";
 
 interface TaskListItemProps {
   listStore: TaskListStore;
@@ -26,22 +27,16 @@ const TaskListItem: React.FC<TaskListItemProps> = ({
       }}
     >
       {/* need to wrap checkbox in a div because needs to stop click event propagation */}
-      <div onClick={($event) => $event.stopPropagation()}>
+      <div className="flex" onClick={($event) => $event.stopPropagation()}>
         <Checkbox
           isChecked={!!task.completed}
           onChange={($event) => {
             task.toggle();
           }}
-          size="lg"
         />
       </div>
       <div className="flex-grow">
-        <h2
-          className="text-lg font-semibold text-gray-800"
-          data-testid={`task-${task.id}-title`}
-        >
-          {task.title}
-        </h2>
+        <EditableTaskTitle task={task} />
         {showDescription && task.description && (
           <p
             className="text-gray-600 mt-2"
