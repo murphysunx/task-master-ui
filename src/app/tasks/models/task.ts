@@ -6,6 +6,7 @@ export default class Task implements Toggleable {
   title!: string;
   description: string | null = null;
   completed: boolean | null = null;
+  listId: number | null = null;
 
   constructor(task: ITask) {
     Object.assign(this, task);

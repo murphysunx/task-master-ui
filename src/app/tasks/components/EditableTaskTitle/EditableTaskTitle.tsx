@@ -18,7 +18,6 @@ const EditableTaskTitle = ({ task, size }: EditableTaskTitleProps) => {
 
   return (
     <Input
-      data-testid={`editable-task-title-${task.id}`}
       ref={input}
       className="bg-transparent"
       defaultValue={task.title}

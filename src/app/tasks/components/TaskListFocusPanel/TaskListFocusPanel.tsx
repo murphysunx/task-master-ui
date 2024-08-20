@@ -22,11 +22,12 @@ const TaskListFocusPanel = ({ listStore }: TaskListFocusPanelProps) => {
             />
             <EditableTaskTitle task={listStore.focusedTask} size="xl" />
           </Flex>
-          <Text className="pt-4">
-            {listStore.focusedTask.description || (
-              <Text className="text-gray-400">Description</Text>
-            )}
-          </Text>
+          {listStore.focusedTask.description && (
+            <Text className="pt-4">{listStore.focusedTask.description}</Text>
+          )}
+          {!listStore.focusedTask.description && (
+            <Text className="text-gray-400">Description</Text>
+          )}
         </Box>
       )}
     </div>

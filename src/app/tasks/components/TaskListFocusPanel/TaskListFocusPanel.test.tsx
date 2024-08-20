@@ -35,7 +35,7 @@ describe("Task List Focus Panel", () => {
     const [task] = store.allTasks;
     store.focusTask(task);
     renderPanel(store);
-    const titleElement = screen.queryByText(task.title);
+    const titleElement = screen.queryByDisplayValue(task.title);
     expect(titleElement).not.toBeNull();
     expect(titleElement).toBeVisible();
   });

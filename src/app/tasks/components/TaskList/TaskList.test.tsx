@@ -4,8 +4,9 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { DEFAULT_MAX_TASK_LIST_ITEM } from "../../consts/DEFAULT_MAX_TASK_LIST_ITEM";
 import { EMPTY_LIST_MESSAGE } from "../../consts/EMPTY_LIST_MESSAGE";
 import { ITask } from "../../interfaces/task.interface";
@@ -122,20 +123,27 @@ describe("TaskList Component", () => {
     expect(showAllButton).not.toBeInTheDocument();
   });
 
-  it("should display non-completed tasks before completed tasks", () => {
+  it("should display todo tasks before completed tasks", () => {
     const completedTask: ITask = { id: 1, title: "Task 1", completed: true };
-    const nonCompletedTask: ITask = {
+    const todoTask: ITask = {
       id: 2,
       title: "Task 2",
       completed: false,
     };
     store.addTask(completedTask);
-    store.addTask(nonCompletedTask);
+    store.addTask(todoTask);
     renderComponent();
     const items = queryAllTaskListItemElements();
     expect(items).toHaveLength(2);
-    expect(items[0]).toHaveTextContent("Task 2");
-    expect(items[1]).toHaveTextContent("Task 1");
+    const [todoItem, completedItem] = items;
+    const todoTitle = within(todoItem).queryByDisplayValue(todoTask.title);
+    expect(todoTitle).not.toBeNull();
+    expect(todoTitle).toBeVisible();
+    const completedTitle = within(completedItem).queryByDisplayValue(
+      completedTask.title
+    );
+    expect(completedTitle).not.toBeNull();
+    expect(completedTitle).toBeVisible();
   });
 
   it("should sort tasks by title in ascending order", () => {
@@ -146,8 +154,13 @@ describe("TaskList Component", () => {
     renderComponent();
     const items = queryAllTaskListItemElements();
     expect(items).toHaveLength(2);
-    expect(items[0]).toHaveTextContent("A Task");
-    expect(items[1]).toHaveTextContent("B Task");
+    const [itemA, itemB] = items;
+    const titleA = within(itemA).queryByDisplayValue(taskA.title);
+    expect(titleA).not.toBeNull();
+    expect(titleA).toBeVisible();
+    const titleB = within(itemB).queryByDisplayValue(taskB.title);
+    expect(titleB).not.toBeNull();
+    expect(titleB).toBeVisible();
   });
 
   it("should include a form", () => {
