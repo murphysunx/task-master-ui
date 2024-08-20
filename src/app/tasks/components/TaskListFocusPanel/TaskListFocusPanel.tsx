@@ -1,6 +1,7 @@
-import { Box, Checkbox, Flex, Text } from "@chakra-ui/react";
+import { Box, Checkbox, Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import TaskListStore from "../../stores/taskListStore";
+import EditableTaskDescription from "../EditableTaskDescription/EditableTaskDescription";
 import EditableTaskTitle from "../EditableTaskTitle/EditableTaskTitle";
 
 type TaskListFocusPanelProps = {
@@ -22,12 +23,7 @@ const TaskListFocusPanel = ({ listStore }: TaskListFocusPanelProps) => {
             />
             <EditableTaskTitle task={listStore.focusedTask} size="xl" />
           </Flex>
-          {listStore.focusedTask.description && (
-            <Text className="pt-4">{listStore.focusedTask.description}</Text>
-          )}
-          {!listStore.focusedTask.description && (
-            <Text className="text-gray-400">Description</Text>
-          )}
+          <EditableTaskDescription task={listStore.focusedTask} />
         </Box>
       )}
     </div>

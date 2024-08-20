@@ -31,6 +31,13 @@ export default class Task implements Toggleable {
     return this.patchTask({ title: newTitle });
   }
 
+  updateDescription(newDescription: string) {
+    this.description = newDescription;
+    return this.patchTask({
+      description: this.description,
+    });
+  }
+
   private patchTask(payload: Omit<Partial<ITask>, "id">): Promise<ITask> {
     // sync
     return fetch(`/api/tasks/${this.id}`, {

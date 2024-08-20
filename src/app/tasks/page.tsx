@@ -1,6 +1,6 @@
 "use client";
 
-import { Divider } from "@chakra-ui/react";
+import { Box, Divider } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import TaskListView from "./components/TaskList/TaskList";
 import TaskListFocusPanel from "./components/TaskListFocusPanel/TaskListFocusPanel";
@@ -14,12 +14,14 @@ export default function TaskHomePage() {
   }, [taskListStore]);
 
   return (
-    <div className="flex gap-10">
+    <Box className="flex gap-10">
       <TaskListView store={taskListStore} />
-      <div>
+      <Box>
         <Divider orientation="vertical" />
-      </div>
-      <TaskListFocusPanel listStore={taskListStore} />
-    </div>
+      </Box>
+      <Box className="flex-grow h-full">
+        <TaskListFocusPanel listStore={taskListStore} />
+      </Box>
+    </Box>
   );
 }
