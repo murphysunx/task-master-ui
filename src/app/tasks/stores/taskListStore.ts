@@ -60,6 +60,9 @@ export default class TaskListStore {
 
   async deleteTask(task: Task) {
     await task.delete();
+    if (this.focus?.id === task.id) {
+      this.focus = null;
+    }
     this.tasks = this.tasks.filter((t) => t.id !== task.id);
   }
 
