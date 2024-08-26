@@ -33,6 +33,5 @@ export const Completed: Story = {
       description: "sflwsjlfkjsldf",
     }),
     listStore: store,
-    showDescription: false,
   },
 };
