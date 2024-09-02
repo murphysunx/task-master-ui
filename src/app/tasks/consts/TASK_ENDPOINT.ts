@@ -1,1 +1,1 @@
-export const TASK_ENDPOINT = "http://localhost:3001/tasks";
+export const TASK_ENDPOINT = process.env.TASK_ENDPOINT;
