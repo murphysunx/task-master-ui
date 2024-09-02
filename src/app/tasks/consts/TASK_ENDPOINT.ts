@@ -1,1 +1,1 @@
-export const TASK_ENDPOINT = process.env.TASK_ENDPOINT;
+export const TASK_ENDPOINT = process.env.TASK_ENDPOINT as string;
