@@ -3,7 +3,5 @@ export default function TaskLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <div className="flex flex-col flex-grow p-10 bg-white">{children}</div>
-  );
+  return <div className="h-full p-10 bg-white">{children}</div>;
 }

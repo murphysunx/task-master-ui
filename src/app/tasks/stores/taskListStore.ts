@@ -13,6 +13,7 @@ export default class TaskListStore {
   private focus: Task | null = null;
 
   error?: string;
+  private loading = false;
 
   constructor(name: string, taskListId?: number) {
     this.id = taskListId;
@@ -46,6 +47,10 @@ export default class TaskListStore {
     return this.tasks.length > DEFAULT_MAX_TASK_LIST_ITEM && !this.showAll;
   }
 
+  get isLoading() {
+    return this.loading;
+  }
+
   addTask(task: ITask): void {
     const existing = this.tasks.find((t) => t.id === task.id);
     if (existing) {
@@ -67,6 +72,7 @@ export default class TaskListStore {
   }
 
   async loadTasksFromServer(): Promise<void> {
+    this.loading = true;
     const response = await fetch("/api/tasks", { method: "get" });
     if (response.ok) {
       const tasks: ITask[] = await response.json();
@@ -74,6 +80,7 @@ export default class TaskListStore {
     } else {
       this.error = "Fail to load tasks from the server";
     }
+    this.loading = false;
   }
 
   async createTask(title: string, description?: string) {

@@ -20,8 +20,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <Header />
-          <main>{children}</main>
+          <div className="flex felx-col min-h-screen">
+            <Header />
+            <main className="flex-grow">{children}</main>
+          </div>
         </Providers>
       </body>
     </html>
