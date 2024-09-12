@@ -1,23 +1,50 @@
 import { CloseIcon } from "@chakra-ui/icons";
 import { Checkbox, IconButton } from "@chakra-ui/react";
-
-import { observer } from "mobx-react-lite";
 import React from "react";
-import Task from "../../models/task";
-import TaskListStore from "../../stores/taskListStore";
+import { ITask } from "../../types/task";
 import EditableTaskTitle from "../EditableTaskTitle/EditableTaskTitle";
 
 interface TaskListItemProps {
-  listStore: TaskListStore;
-  task: Task;
+  task: ITask;
+  /**
+   * focus on a task
+   * @param task a task
+   * @returns
+   */
+  focusTask: () => void;
+  /**
+   * toggle the completion status of a task
+   * @param task a task
+   * @returns
+   */
+  toggleTask: () => Promise<void>;
+  /**
+   * update a task's title
+   * @param title new title
+   * @param task a task
+   * @returns
+   */
+  updateTaskTitle: (newTitle: string) => Promise<void>;
+  /**
+   * delete a task
+   * @param task a task
+   * @returns
+   */
+  deleteTask: () => Promise<void>;
 }
 
-const TaskListItem: React.FC<TaskListItemProps> = ({ listStore, task }) => {
+const TaskListItem: React.FC<TaskListItemProps> = ({
+  task,
+  focusTask,
+  toggleTask,
+  updateTaskTitle,
+  deleteTask,
+}) => {
   return (
     <div
       className="hover:bg-sky-100 shadow-md p-4 border-b border-solid border-gray-700 flex items-center gap-2"
       onClick={($event) => {
-        listStore.focusTask(task);
+        focusTask();
       }}
     >
       {/* need to wrap checkbox in a div because needs to stop click event propagation */}
@@ -25,12 +52,12 @@ const TaskListItem: React.FC<TaskListItemProps> = ({ listStore, task }) => {
         <Checkbox
           isChecked={!!task.completed}
           onChange={($event) => {
-            task.toggle();
+            toggleTask();
           }}
         />
       </div>
       <div className="flex-grow">
-        <EditableTaskTitle task={task} />
+        <EditableTaskTitle task={task} updateTaskTitle={updateTaskTitle} />
       </div>
       <IconButton
         className="hover:text-red-600"
@@ -38,11 +65,11 @@ const TaskListItem: React.FC<TaskListItemProps> = ({ listStore, task }) => {
         variant="ghost"
         icon={<CloseIcon />}
         onClick={($event) => {
-          listStore.deleteTask(task);
+          deleteTask();
         }}
       />
     </div>
   );
 };
 
-export default observer(TaskListItem);
+export default TaskListItem;

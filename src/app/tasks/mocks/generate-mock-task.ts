@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
-import { ITask } from "../interfaces/task.interface";
+import { TaskResponseDto } from "../dtos/task.dto";
 
 export function generateMockTasks(count: number, listId?: number) {
-  const tasks: ITask[] = Array(count)
+  const tasks: TaskResponseDto[] = Array(count)
     .fill(0)
     .map((_) => {
       return {

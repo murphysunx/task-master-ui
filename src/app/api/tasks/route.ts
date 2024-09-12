@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { TASK_ENDPOINT } from "../../tasks/consts/TASK_ENDPOINT";
-import { ITask } from "../../tasks/interfaces/task.interface";
+import { TaskResponseDto } from "../../tasks/dtos/task.dto";
 
 export async function GET(request: Request) {
   const response = await fetch(
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     throw new Error("failing getting all tasks");
   }
 
-  const tasks: ITask[] = await response.json();
+  const tasks: TaskResponseDto[] = await response.json();
   return NextResponse.json(tasks);
 }
 
@@ -33,7 +33,6 @@ export async function POST(request: NextRequest) {
   if (!response.ok) {
     throw new Error("failing creating task");
   }
-
-  const created: ITask = await response.json();
+  const created: TaskResponseDto = await response.json();
   return NextResponse.json(created);
 }

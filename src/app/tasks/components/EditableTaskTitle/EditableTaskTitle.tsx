@@ -2,14 +2,25 @@ import { Input, InputProps } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import { observer } from "mobx-react-lite";
 import { useRef } from "react";
-import Task from "../../models/task";
+import { ITask } from "../../types/task";
 
 type EditableTaskTitleProps = {
-  task: Task;
+  task: ITask;
   size?: InputProps["size"];
+  /**
+   * update a task's title
+   * @param title new title
+   * @param task a task
+   * @returns
+   */
+  updateTaskTitle: (newTitle: string, task: ITask) => Promise<void>;
 };
 
-const EditableTaskTitle = ({ task, size }: EditableTaskTitleProps) => {
+const EditableTaskTitle = ({
+  task,
+  size,
+  updateTaskTitle,
+}: EditableTaskTitleProps) => {
   const input = useRef<HTMLInputElement>(null);
 
   if (input.current) {
@@ -25,10 +36,10 @@ const EditableTaskTitle = ({ task, size }: EditableTaskTitleProps) => {
       variant="custom"
       onChange={debounce(($event) => {
         const newTitle = $event.target.value;
-        task.updateTitle(newTitle);
+        updateTaskTitle(newTitle, task);
       }, 500)}
     />
   );
 };
 
-export default observer(EditableTaskTitle);
+export default EditableTaskTitle;

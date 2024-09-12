@@ -7,7 +7,7 @@ import {
 } from "@testing-library/react";
 import { runInAction } from "mobx";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ITask } from "../../interfaces/task.interface";
+import { TaskResponseDto } from "../../dtos/task.dto";
 import Task from "../../models/task";
 import TaskListStore from "../../stores/taskListStore";
 import TaskListItem from "./TaskListItem";
@@ -48,7 +48,7 @@ describe("TaskListItem", () => {
           completed: taskWithDescription.completed || void 0,
           description: taskWithDescription.description || void 0,
           listId: taskWithDescription.listId || void 0,
-        } satisfies ITask;
+        } satisfies TaskResponseDto;
       });
     const checkbox = screen.queryByRole<HTMLInputElement>("checkbox");
     expect(checkbox).not.toBeNull();
@@ -108,7 +108,7 @@ describe("TaskListItem", () => {
           completed: taskWithDescription.completed || void 0,
           description: taskWithDescription.description || void 0,
           listId: taskWithDescription.listId || void 0,
-        } satisfies ITask;
+        } satisfies TaskResponseDto;
       });
     const checkbox = screen.queryByRole<HTMLInputElement>("checkbox");
     expect(store.focusedTask).toBeNull();

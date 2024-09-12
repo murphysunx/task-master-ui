@@ -1,5 +1,5 @@
 import { TASK_ENDPOINT } from "@/app/tasks/consts/TASK_ENDPOINT";
-import { ITask } from "@/app/tasks/interfaces/task.interface";
+import { TaskResponseDto } from "@/app/tasks/dtos/task.dto";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
@@ -18,7 +18,7 @@ export async function PATCH(
   if (!response.ok) {
     throw new Error("failed to update the task");
   }
-  const updated: ITask = await response.json();
+  const updated: TaskResponseDto = await response.json();
   return NextResponse.json(updated);
 }
 
@@ -33,6 +33,6 @@ export async function DELETE(
   if (!response.ok) {
     throw new Error("failed to update the task");
   }
-  const deleted: ITask = await response.json();
+  const deleted: TaskResponseDto = await response.json();
   return NextResponse.json(deleted);
 }

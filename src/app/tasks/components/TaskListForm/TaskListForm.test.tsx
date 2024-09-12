@@ -6,30 +6,36 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import TaskListStore from "../../stores/taskListStore";
 import TaskListForm from "./TaskListForm";
+import { ITask } from "../../types/task";
 
 describe("Task list form", () => {
-  let store: TaskListStore;
+  let props: React.ComponentProps<typeof TaskListForm>;
 
   beforeEach(() => {
-    store = new TaskListStore("test");
+    props = {
+      createTaskForList: vi
+        .fn()
+        .mockImplementation(
+          async (title: string) => ({ id: 1, title }) satisfies ITask
+        ),
+    };
   });
 
-  function renderComponent(store: TaskListStore) {
-    render(<TaskListForm store={store} />);
+  function renderComponent() {
+    render(<TaskListForm {...props} />);
   }
 
-  function queryTaskListForm(store: TaskListStore) {
-    return screen.queryByTestId(`${store.listName}-form`);
+  function queryTaskListForm() {
+    return screen.queryByRole("form");
   }
 
-  function queryTitleInput(store: TaskListStore): HTMLInputElement | null {
-    return screen.queryByTestId(`${store.listName}-new-task-title-input`);
+  function queryTitleInput(): HTMLInputElement | null {
+    return screen.queryByRole("textbox");
   }
 
-  function queryHiddenSubmitInput(store: TaskListStore) {
-    return screen.queryByTestId(`${store.listName}-new-task-submit`);
+  function queryHiddenSubmitInput() {
+    return screen.queryByRole("button");
   }
 
   function typeTaskTitle(title: string, input: HTMLInputElement) {
@@ -40,62 +46,43 @@ describe("Task list form", () => {
     fireEvent.submit(input);
   }
 
-  test("should render", () => {
-    renderComponent(store);
+  test("should render without any error", () => {
+    renderComponent();
   });
 
   test("should have a form", () => {
-    renderComponent(store);
-    expect(queryTaskListForm(store)).not.toBeNull();
+    renderComponent();
+    expect(queryTaskListForm()).not.toBeNull();
   });
 
   test("should have the input field", () => {
-    renderComponent(store);
-    const input = queryTitleInput(store);
+    renderComponent();
+    const input = queryTitleInput();
     expect(input).not.toBeNull();
     expect(input!.type).toBe("text");
   });
 
-  test("should have a hidden submit input", () => {
-    renderComponent(store);
-    const submit = queryHiddenSubmitInput(store);
-    expect(submit).not.toBeNull();
-    expect(submit!.hidden).toBeTruthy();
-  });
-
-  test("should not call store.createTask when submitting with empty title", async () => {
-    renderComponent(store);
-    // mock createTask
-    vi.spyOn(store, "createTask").mockImplementationOnce(vi.fn());
-    const mockedCreateTask = vi.mocked(store.createTask);
-    const input = queryTitleInput(store);
-    expect(mockedCreateTask).not.toHaveBeenCalled();
+  test("should not run callback in props when submitting with empty title", async () => {
+    renderComponent();
+    const input = queryTitleInput();
+    expect(props.createTaskForList).not.toHaveBeenCalled();
     act(() => submitInput(input!));
     await waitFor(() => {
-      expect(mockedCreateTask).not.toHaveBeenCalled();
+      expect(props.createTaskForList).not.toHaveBeenCalled();
     });
   });
 
   test("should call store.createTask when submitting with valid title", async () => {
-    renderComponent(store);
-    // mock createTask
-    vi.spyOn(store, "createTask").mockImplementationOnce((title) =>
-      Promise.resolve({
-        id: 1,
-        title,
-      })
-    );
-    const mockedCreateTask = vi.mocked(store.createTask);
-    const input = queryTitleInput(store);
-    expect(mockedCreateTask).not.toHaveBeenCalled();
+    renderComponent();
+    const input = queryTitleInput();
     const title = "new Task";
     act(() => {
       typeTaskTitle(title, input!);
       submitInput(input!);
     });
     await waitFor(() => {
-      expect(mockedCreateTask).toHaveBeenCalledOnce();
-      expect(mockedCreateTask).toHaveBeenCalledWith(title);
+      expect(props.createTaskForList).toHaveBeenCalledOnce();
+      expect(props.createTaskForList).toHaveBeenCalledWith(title);
       // reset form title value
       expect(input!.value).toBe("");
     });

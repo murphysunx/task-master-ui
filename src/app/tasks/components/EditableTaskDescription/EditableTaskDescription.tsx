@@ -2,13 +2,23 @@ import { Textarea } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useRef } from "react";
-import Task from "../../models/task";
+import { ITask } from "../../types/task";
 
 type EditableTaskDescriptionProps = {
-  task: Task;
+  task: ITask;
+  /**
+   * update a task's description
+   * @param newDescription text
+   * @param task a task
+   * @returns
+   */
+  updateTaskDescription: (newDescription: string, task: ITask) => Promise<void>;
 };
 
-const EditableTaskDescription = ({ task }: EditableTaskDescriptionProps) => {
+const EditableTaskDescription = ({
+  task,
+  updateTaskDescription,
+}: EditableTaskDescriptionProps) => {
   const textboxRef = useRef<HTMLTextAreaElement>(null);
 
   if (textboxRef.current) {
@@ -24,10 +34,10 @@ const EditableTaskDescription = ({ task }: EditableTaskDescriptionProps) => {
       resize="none"
       onChange={debounce(($event: ChangeEvent<HTMLTextAreaElement>) => {
         const value = $event.target.value;
-        task.updateDescription(value);
+        updateTaskDescription(value, task);
       }, 500)}
     ></Textarea>
   );
 };
 
-export default observer(EditableTaskDescription);
+export default EditableTaskDescription;

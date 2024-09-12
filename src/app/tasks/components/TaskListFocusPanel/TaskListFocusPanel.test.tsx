@@ -1,13 +1,23 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import TaskListStore from "../../stores/taskListStore";
-import { ITask } from "../../interfaces/task.interface";
+import { TaskResponseDto } from "../../dtos/task.dto";
 import { render, screen } from "@testing-library/react";
 import TaskListFocusPanel from "./TaskListFocusPanel";
 
 describe("Task List Focus Panel", () => {
   let store: TaskListStore;
-  const play: ITask = { id: 1, title: "Play", completed: true };
-  const code: ITask = { id: 2, title: "Code", description: "Code is easy" };
+  const play: TaskResponseDto = {
+    id: 1,
+    title: "Play",
+    completed: true,
+    userId: 1,
+  };
+  const code: TaskResponseDto = {
+    id: 2,
+    title: "Code",
+    description: "Code is easy",
+    userId: 1,
+  };
 
   beforeEach(() => {
     store = new TaskListStore("All");
@@ -16,7 +26,7 @@ describe("Task List Focus Panel", () => {
   });
 
   function renderPanel(store: TaskListStore) {
-    render(<TaskListFocusPanel listStore={store} />);
+    render(<TaskListFocusPanel />);
   }
 
   function queryPanelContainer() {

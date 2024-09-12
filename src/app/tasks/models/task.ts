@@ -1,50 +1,76 @@
 import { makeAutoObservable } from "mobx";
-import { ITask, Toggleable } from "../interfaces/task.interface";
+import { TaskResponseDto } from "../dtos/task.dto";
 
-export default class Task implements Toggleable {
-  id!: number;
-  title!: string;
-  description: string | null = null;
-  completed: boolean | null = null;
-  listId: number | null = null;
+export default class Task implements TaskResponseDto {
+  private _id!: number;
+  private _title!: string;
+  private _userId!: number;
+  private _description: string | null = null;
+  private _completed: boolean = false;
+  private _listId: number | null = null;
 
-  constructor(task: ITask) {
-    Object.assign(this, task);
+  constructor(task: TaskResponseDto) {
+    this._id = task.id;
+    this._title = task.title;
+    this._userId = task.userId;
+    this._description = task.description || null;
+    this._completed = task.completed || false;
+    this._listId = task.listId || null;
     makeAutoObservable(this);
   }
 
-  toggle() {
-    this.completed = !this.completed;
-    return this.patchTask({ completed: this.completed });
+  get id() {
+    return this._id;
   }
 
-  delete() {
-    return fetch(`/api/tasks/${this.id}`, {
-      method: "DELETE",
-    }).catch((reason) => {
-      console.error("fail to delete task");
-    });
+  set title(value: string) {
+    this._title = value;
   }
 
-  updateTitle(newTitle: string) {
-    this.title = newTitle;
-    return this.patchTask({ title: newTitle });
+  get title(): string {
+    return this._title;
   }
 
-  updateDescription(newDescription: string) {
-    this.description = newDescription;
-    return this.patchTask({
+  set userId(value: number) {
+    this._userId = value;
+  }
+
+  get userId(): number {
+    return this._userId;
+  }
+
+  set description(value: string) {
+    this._description = value;
+  }
+
+  get description(): string | undefined {
+    return this._description || void 0;
+  }
+
+  set completed(value: boolean) {
+    this._completed = value;
+  }
+
+  get completed(): boolean | undefined {
+    return this._completed;
+  }
+
+  set listId(value: number) {
+    this._listId = value;
+  }
+
+  get listId(): number | undefined {
+    return this._listId || void 0;
+  }
+
+  toJS(): TaskResponseDto {
+    return {
+      id: this.id,
+      title: this.title,
+      userId: this.userId,
+      completed: this.completed,
       description: this.description,
-    });
-  }
-
-  private patchTask(payload: Omit<Partial<ITask>, "id">): Promise<ITask> {
-    // sync
-    return fetch(`/api/tasks/${this.id}`, {
-      method: "PATCH",
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .catch((reason) => console.error(`fail to update task`));
+      listId: this.listId,
+    };
   }
 }
