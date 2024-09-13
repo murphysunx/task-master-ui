@@ -73,4 +73,13 @@ export default class Task implements TaskResponseDto {
       listId: this.listId,
     };
   }
+
+  update(updates: TaskResponseDto): typeof this {
+    this._title = updates.title;
+    this._description = updates.description ?? null;
+    this._completed = updates.completed ?? false;
+    this._userId = updates.userId;
+    this._listId = updates.listId ?? null;
+    return this;
+  }
 }

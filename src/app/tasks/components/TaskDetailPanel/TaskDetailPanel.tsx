@@ -3,7 +3,7 @@ import { ITask } from "../../types/task";
 import EditableTaskDescription from "../EditableTaskDescription/EditableTaskDescription";
 import EditableTaskTitle from "../EditableTaskTitle/EditableTaskTitle";
 
-type TaskListFocusPanelProps = {
+type TaskDetailPanelProps = {
   task: ITask;
   /**
    * toggle the completion status of a task
@@ -27,12 +27,12 @@ type TaskListFocusPanelProps = {
   updateTaskDescription: (newDescription: string, task: ITask) => Promise<void>;
 };
 
-const TaskListFocusPanel = ({
+const TaskDetailPanel = ({
   task,
   toggleTask,
   updateTaskTitle,
   updateTaskDescription,
-}: TaskListFocusPanelProps) => {
+}: TaskDetailPanelProps) => {
   return (
     <Box>
       <Flex gap="4">
@@ -57,4 +57,4 @@ const TaskListFocusPanel = ({
   );
 };
 
-export default TaskListFocusPanel;
+export default TaskDetailPanel;

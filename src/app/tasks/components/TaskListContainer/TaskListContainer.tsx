@@ -1,26 +1,37 @@
-import { Box, VStack } from "@chakra-ui/react";
-import { observer } from "mobx-react-lite";
-import { useContext } from "react";
-import { TaskStoreContext } from "../../contexts/taskStore";
-import { TaskUIStoreContext } from "../../contexts/taskUIStore";
+import { AddIcon } from "@chakra-ui/icons";
+import { Box, IconButton, VStack } from "@chakra-ui/react";
+import { TaskListAbs } from "../../abstracts/taskList";
 import { UserTaskList } from "../../models/userTaskList";
 
-const TaskListContainer = () => {
-  const taskStore = useContext(TaskStoreContext);
-  const taskUIStore = useContext(TaskUIStoreContext);
+type TaskListContainerProps = {
+  taskLists: ReadonlyArray<TaskListAbs>;
+  /**
+   *
+   * @param list
+   * @returns
+   */
+  focusTaskList: (list: TaskListAbs) => void;
+};
 
+const TaskListContainer = ({
+  taskLists,
+  focusTaskList,
+}: TaskListContainerProps) => {
   return (
     <VStack>
-      {taskStore.taskLists.map((list) => (
+      {taskLists.map((list) => (
         <Box
           key={list instanceof UserTaskList ? list.id : "inbox"}
-          onClick={() => (taskUIStore.focusedTaskList = list)}
+          onClick={() => focusTaskList(list)}
         >
           {list.name}
         </Box>
       ))}
+      <Box>
+        <IconButton icon={<AddIcon />} aria-label={"create new task list"} />
+      </Box>
     </VStack>
   );
 };
 
-export default observer(TaskListContainer);
+export default TaskListContainer;

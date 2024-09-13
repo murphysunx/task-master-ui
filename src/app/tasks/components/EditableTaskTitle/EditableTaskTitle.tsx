@@ -1,6 +1,5 @@
 import { Input, InputProps } from "@chakra-ui/react";
 import { debounce } from "lodash";
-import { observer } from "mobx-react-lite";
 import { useRef } from "react";
 import { ITask } from "../../types/task";
 

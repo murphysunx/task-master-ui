@@ -5,57 +5,47 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { runInAction } from "mobx";
-import { beforeEach, describe, expect, MockInstance, test, vi } from "vitest";
-import Task from "../../models/task";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import EditableTaskDescription from "./EditableTaskDescription";
 
 describe("EditableTaskDescription", () => {
-  let task: Task;
-  let mockUpdateDescriptionFn: MockInstance;
+  let props: React.ComponentProps<typeof EditableTaskDescription>;
 
   beforeEach(() => {
-    task = new Task({
-      id: 1,
-      title: "My Task",
-    });
-    mockUpdateDescriptionFn = vi
-      .spyOn(task, "updateDescription")
-      .mockImplementation(async (value) => {
-        runInAction(() => (task.description = value));
-        return {
-          id: task.id,
-          title: task.title,
-          completed: task.completed || void 0,
-          description: task.description || void 0,
-          listId: task.listId || void 0,
-        };
-      });
+    props = {
+      task: {
+        id: 1,
+        title: "Play",
+        userId: 1,
+      },
+      updateTaskDescription: vi.fn(),
+    };
   });
 
   test("should show a placeholder when no description", () => {
-    render(<EditableTaskDescription task={task} />);
+    render(<EditableTaskDescription {...props} />);
     const placeholder = screen.queryByPlaceholderText("Description");
     expect(placeholder).not.toBeNull();
     expect(placeholder).toBeVisible();
   });
 
   test("should show description", () => {
-    const taskWithDescription = new Task({
-      id: 1,
-      title: "New Task",
-      description: "This is my new task",
-    });
-    render(<EditableTaskDescription task={taskWithDescription} />);
-    const textbox = screen.queryByDisplayValue(
-      taskWithDescription.description!
-    );
+    props = {
+      ...props,
+      task: {
+        ...props.task,
+        description: "Play what?",
+      },
+    };
+    render(<EditableTaskDescription {...props} />);
+    const textbox = screen.queryByRole("textbox");
     expect(textbox).not.toBeNull();
     expect(textbox).toBeVisible();
+    expect(textbox).toHaveTextContent(props.task.description!);
   });
 
   test("should add description to a task", async () => {
-    render(<EditableTaskDescription task={task} />);
+    render(<EditableTaskDescription {...props} />);
     const textbox = screen.queryByRole("textbox");
     expect(textbox).not.toBeNull();
     expect(textbox).toBeVisible();
@@ -66,11 +56,11 @@ describe("EditableTaskDescription", () => {
       })
     );
     await waitFor(() => {
-      expect(mockUpdateDescriptionFn).toHaveBeenCalledWith(description);
-      const newDescription = screen.queryByDisplayValue(description);
-      expect(newDescription).not.toBeNull();
-      expect(newDescription).toBeVisible();
-      expect(task.description).toBe(description);
+      expect(props.updateTaskDescription).toHaveBeenCalledOnce();
+      expect(props.updateTaskDescription).toHaveBeenCalledWith(
+        description,
+        props.task
+      );
     });
   });
 });

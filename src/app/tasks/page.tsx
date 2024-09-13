@@ -9,21 +9,29 @@ import {
   IconButton,
   Spinner,
 } from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
 import { useCallback, useEffect, useState } from "react";
-import { TaskStoreContext } from "./contexts/taskStore";
-import { TaskUIStoreContext } from "./contexts/taskUIStore";
-import { TasksWithListsDto } from "./dtos/task.dto";
+import { TaskListAbs } from "./abstracts/taskList";
+import TaskContainer from "./components/TaskContainer/TaskContainer";
+import TaskListContainer from "./components/TaskListContainer/TaskListContainer";
+import {
+  CreateTaskDto,
+  TaskResponseDto,
+  TasksWithListsDto,
+  UpdateTaskDto,
+} from "./dtos/task.dto";
+import { CreateTaskListDto, TaskListResponseDto } from "./dtos/taskList.dto";
+import { GeneralTaskList } from "./models/generalTaskList";
 import Task from "./models/task";
 import { UserTaskList } from "./models/userTaskList";
 import taskStore from "./stores/taskStore";
-import taskUIStore from "./stores/taskUIStore";
-import TaskListContainer from "./components/TaskListContainer/TaskListContainer";
-import TaskContainer from "./components/TaskContainer/TaskContainer";
-import { observer } from "mobx-react-lite";
 
 const TaskHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [focusedList, setFocusedList] = useState<
+    GeneralTaskList | UserTaskList
+  >(taskStore.inbox);
 
   const fetchData = useCallback(async () => {
     const response = await fetch("/api/tasks", { method: "GET" });
@@ -41,6 +49,66 @@ const TaskHomePage = () => {
       });
     }
   }, []);
+
+  const createTaskList = useCallback(async (name: string) => {
+    const response = await fetch("/api/tasks/lists", {
+      method: "POST",
+      body: JSON.stringify({ name } satisfies CreateTaskListDto),
+    });
+    if (!response) {
+      throw new Error(`Fail to create a task list named ${name}`);
+    }
+    const list: TaskListResponseDto = await response.json();
+    const taskList = new UserTaskList(list);
+    taskStore.addUserList(taskList);
+    return taskList;
+  }, []);
+
+  const createTaskForList = useCallback(
+    async (title: string, list: GeneralTaskList | UserTaskList) => {
+      const response = await fetch(`/api/tasks`, {
+        method: "POST",
+        body: JSON.stringify({
+          title,
+          listId: list instanceof GeneralTaskList ? void 0 : list.id,
+          userId: 1,
+        } satisfies CreateTaskDto),
+      });
+      if (!response.ok) {
+        throw new Error(`Fail to create a task`);
+      }
+      const dto = await response.json();
+      const task = new Task(dto);
+      focusedList.addTask(task);
+      return dto;
+    },
+    [focusedList]
+  );
+
+  const updateTask = useCallback(async (task: Task, updates: UpdateTaskDto) => {
+    const response = await fetch(`/api/tasks/${task.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(updates satisfies UpdateTaskDto),
+    });
+    if (!response.ok) {
+      throw new Error(`Fail to update a task`);
+    }
+    const dto: TaskResponseDto = await response.json();
+    task.update(dto);
+  }, []);
+
+  const deleteTaskFromList = useCallback(
+    async (task: Task, list: TaskListAbs) => {
+      const response = await fetch(`/api/tasks/${task.id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`Fail to delete a task`);
+      }
+      list.removeTask(task);
+    },
+    []
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -69,15 +137,21 @@ const TaskHomePage = () => {
             </Center>
           )}
           {!isLoading && (
-            <TaskStoreContext.Provider value={taskStore}>
-              <TaskUIStoreContext.Provider value={taskUIStore}>
-                <TaskListContainer />
-                <Box>
-                  <Divider orientation="vertical" />
-                </Box>
-                <TaskContainer />
-              </TaskUIStoreContext.Provider>
-            </TaskStoreContext.Provider>
+            <>
+              <TaskListContainer
+                taskLists={taskStore.taskLists}
+                focusTaskList={setFocusedList}
+              />
+              <Box>
+                <Divider orientation="vertical" />
+              </Box>
+              <TaskContainer
+                taskList={focusedList}
+                createTaskForList={createTaskForList}
+                updateTask={updateTask}
+                deleteTaskFromList={deleteTaskFromList}
+              />
+            </>
           )}
         </>
       )}
