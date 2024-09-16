@@ -6,24 +6,24 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import TaskListForm from "./TaskListForm";
 import { ITask } from "../../types/task";
+import CreateTaskForm from "./CreateTaskForm";
 
 describe("Task list form", () => {
-  let props: React.ComponentProps<typeof TaskListForm>;
+  let props: React.ComponentProps<typeof CreateTaskForm>;
 
   beforeEach(() => {
     props = {
       createTaskForList: vi
         .fn()
         .mockImplementation(
-          async (title: string) => ({ id: 1, title }) satisfies ITask
+          async (title: string) => ({ id: 1, title, userId: 1 }) satisfies ITask
         ),
     };
   });
 
   function renderComponent() {
-    render(<TaskListForm {...props} />);
+    render(<CreateTaskForm {...props} />);
   }
 
   function queryTaskListForm() {

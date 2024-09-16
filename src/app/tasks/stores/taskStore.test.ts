@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { GeneralTaskList } from "../models/generalTaskList";
-import Task from "../models/task";
-import { UserTaskList } from "../models/userTaskList";
+import { GeneralTaskList } from "../models/generalTaskList/generalTaskList";
+import Task from "../models/task/task";
+import { UserTaskList } from "../models/userTaskList/userTaskList";
 import TaskStore from "./taskStore";
 
 describe("TaskStore", () => {
@@ -53,6 +53,7 @@ describe("TaskStore", () => {
     const task = new Task({
       id: 1,
       title: "Play soccre",
+      userId: 1,
     });
     const inbox = taskStore.inbox;
     const addTask = vi.spyOn(inbox!, "addTask");
@@ -64,6 +65,7 @@ describe("TaskStore", () => {
     const task = new Task({
       id: 1,
       title: "Play soccre",
+      userId: 1,
     });
     const inbox = taskStore.inbox;
     const removeTask = vi.spyOn(inbox!, "removeTask");
@@ -82,6 +84,7 @@ describe("TaskStore", () => {
       id: 1,
       title: "Play soccre",
       listId: 1,
+      userId: 1,
     });
     const addTask = vi.spyOn(userList, "addTask");
     taskStore.addTaskToList(task);
@@ -98,6 +101,7 @@ describe("TaskStore", () => {
       id: 1,
       title: "Play soccre",
       listId: 1,
+      userId: 1,
     });
     const removeTask = vi.spyOn(userList, "removeTask");
     taskStore.addTaskToList(task);
@@ -114,6 +118,7 @@ describe("TaskStore", () => {
     const task = new Task({
       id: 1,
       title: "Play soccre",
+      userId: 1,
     });
     const inbox = taskStore.inbox;
     taskStore.addTaskToList(task);

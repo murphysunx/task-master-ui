@@ -1,7 +1,7 @@
 import { TaskListAbs } from "../abstracts/taskList";
-import { GeneralTaskList } from "../models/generalTaskList";
-import Task from "../models/task";
-import { UserTaskList } from "../models/userTaskList";
+import { GeneralTaskList } from "../models/generalTaskList/generalTaskList";
+import Task from "../models/task/task";
+import { UserTaskList } from "../models/userTaskList/userTaskList";
 
 export interface ITaskStore {
   /**

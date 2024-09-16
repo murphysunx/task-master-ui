@@ -3,9 +3,9 @@ import { observer } from "mobx-react-lite";
 import { useCallback, useState } from "react";
 import { TaskListAbs } from "../../abstracts/taskList";
 import { TaskResponseDto, UpdateTaskDto } from "../../dtos/task.dto";
-import Task from "../../models/task";
+import Task from "../../models/task/task";
+import CreateTaskForm from "../CreateTaskForm/CreateTaskForm";
 import TaskDetailPanel from "../TaskDetailPanel/TaskDetailPanel";
-import TaskListForm from "../TaskListForm/TaskListForm";
 import TaskListItem from "../TaskListItem/TaskListItem";
 
 type TaskContainerProps = {
@@ -71,7 +71,7 @@ const TaskContainer = ({
             <Heading size={"md"}>{taskList.name}</Heading>
             <Text>{taskList.tasks.length}</Text>
           </Flex>
-          <TaskListForm
+          <CreateTaskForm
             createTaskForList={(title: string) =>
               createTaskForList(title, taskList)
             }

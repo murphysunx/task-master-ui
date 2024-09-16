@@ -1,24 +1,29 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { GeneralTaskList } from "./generalTaskList";
-import Task from "./task";
+import Task from "../task/task";
+import { UserTaskList } from "./userTaskList";
 
 describe("TaskList", () => {
-  let taskList: GeneralTaskList;
+  let taskList: UserTaskList;
 
   beforeEach(() => {
-    taskList = new GeneralTaskList("Inbox");
+    taskList = new UserTaskList({
+      id: 1,
+      name: "Chore",
+    });
   });
 
   test("Should be defined", () => {
     expect(taskList).toBeDefined();
     expect(taskList.tasks).toHaveLength(0);
-    expect(taskList.name).toBe("Inbox");
+    expect(taskList.id).toBe(1);
+    expect(taskList.name).toBe("Chore");
   });
 
   test("Should add a task to the list", () => {
     const task = new Task({
       id: 1,
       title: `Play football`,
+      userId: 1,
     });
     taskList.addTask(task);
     expect(taskList.tasks).toHaveLength(1);
@@ -29,10 +34,12 @@ describe("TaskList", () => {
     const task = new Task({
       id: 1,
       title: `Play football`,
+      userId: 1,
     });
     const task1 = new Task({
       id: 2,
       title: `Play football`,
+      userId: 1,
     });
     taskList.addTask(task);
     taskList.addTask(task1);
@@ -45,10 +52,12 @@ describe("TaskList", () => {
     const task = new Task({
       id: 1,
       title: `Play football`,
+      userId: 1,
     });
     const task1 = new Task({
       id: 2,
       title: `Play football`,
+      userId: 1,
     });
     taskList.addTask(task);
     taskList.addTask(task1);

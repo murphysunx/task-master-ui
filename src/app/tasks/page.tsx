@@ -21,10 +21,11 @@ import {
   UpdateTaskDto,
 } from "./dtos/task.dto";
 import { CreateTaskListDto, TaskListResponseDto } from "./dtos/taskList.dto";
-import { GeneralTaskList } from "./models/generalTaskList";
-import Task from "./models/task";
-import { UserTaskList } from "./models/userTaskList";
+import { GeneralTaskList } from "./models/generalTaskList/generalTaskList";
+import Task from "./models/task/task";
+import { UserTaskList } from "./models/userTaskList/userTaskList";
 import taskStore from "./stores/taskStore";
+import { CreateTaskListFormFields } from "./types/taskList";
 
 const TaskHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,19 +51,25 @@ const TaskHomePage = () => {
     }
   }, []);
 
-  const createTaskList = useCallback(async (name: string) => {
-    const response = await fetch("/api/tasks/lists", {
-      method: "POST",
-      body: JSON.stringify({ name } satisfies CreateTaskListDto),
-    });
-    if (!response) {
-      throw new Error(`Fail to create a task list named ${name}`);
-    }
-    const list: TaskListResponseDto = await response.json();
-    const taskList = new UserTaskList(list);
-    taskStore.addUserList(taskList);
-    return taskList;
-  }, []);
+  const createTaskList = useCallback(
+    async (values: CreateTaskListFormFields) => {
+      const response = await fetch("/api/tasks/lists", {
+        method: "POST",
+        body: JSON.stringify({
+          ...values,
+          ownerId: 1,
+        } satisfies CreateTaskListDto),
+      });
+      if (!response) {
+        throw new Error(`Fail to create a task list named ${name}`);
+      }
+      const list: TaskListResponseDto = await response.json();
+      const taskList = new UserTaskList(list);
+      taskStore.addUserList(taskList);
+      return taskList;
+    },
+    []
+  );
 
   const createTaskForList = useCallback(
     async (title: string, list: GeneralTaskList | UserTaskList) => {
@@ -141,6 +148,7 @@ const TaskHomePage = () => {
               <TaskListContainer
                 taskLists={taskStore.taskLists}
                 focusTaskList={setFocusedList}
+                createTaskList={createTaskList}
               />
               <Box>
                 <Divider orientation="vertical" />

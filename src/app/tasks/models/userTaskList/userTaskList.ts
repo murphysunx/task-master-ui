@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable } from "mobx";
-import { TaskListAbs } from "../abstracts/taskList";
-import { TaskListResponseDto } from "../dtos/taskList.dto";
+import { TaskListAbs } from "../../abstracts/taskList";
+import { TaskListResponseDto } from "../../dtos/taskList.dto";
 
 export class UserTaskList extends TaskListAbs implements TaskListResponseDto {
   readonly id: number;

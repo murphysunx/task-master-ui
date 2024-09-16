@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { TaskResponseDto } from "../dtos/task.dto";
+import { TaskResponseDto } from "../../dtos/task.dto";
 
 export default class Task implements TaskResponseDto {
   private _id!: number;

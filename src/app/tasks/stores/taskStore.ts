@@ -1,8 +1,8 @@
 import { makeAutoObservable } from "mobx";
 import { TaskListAbs } from "../abstracts/taskList";
-import { GeneralTaskList } from "../models/generalTaskList";
-import Task from "../models/task";
-import { UserTaskList } from "../models/userTaskList";
+import { GeneralTaskList } from "../models/generalTaskList/generalTaskList";
+import Task from "../models/task/task";
+import { UserTaskList } from "../models/userTaskList/userTaskList";
 import { ITaskStore } from "../types/taskStore";
 
 let instance: TaskStore;

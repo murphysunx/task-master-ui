@@ -1,5 +1,5 @@
 import { action, computed, makeObservable, observable } from "mobx";
-import { TaskListAbs } from "../abstracts/taskList";
+import { TaskListAbs } from "../../abstracts/taskList";
 
 export class GeneralTaskList extends TaskListAbs {
   constructor(name: string) {

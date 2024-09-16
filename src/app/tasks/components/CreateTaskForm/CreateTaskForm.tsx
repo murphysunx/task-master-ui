@@ -5,7 +5,6 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { useState } from "react";
 import * as Yup from "yup";
 import { ITask } from "../../types/task";
 
@@ -17,17 +16,13 @@ const CreateTaskSchema = Yup.object().shape({
   title: Yup.string().trim().required("Title is required"),
 });
 
-const TaskListForm = ({ createTaskForList }: TaskListFormProps) => {
-  const [submitting, setSubmitting] = useState(false);
+const CreateTaskForm = ({ createTaskForList }: TaskListFormProps) => {
   const formik = useFormik({
     initialValues: {
       title: "",
     },
     onSubmit: (values) => {
-      setSubmitting(true);
-      createTaskForList(values.title)
-        .then(() => formik.resetForm())
-        .finally(() => setSubmitting(false));
+      createTaskForList(values.title).then(() => formik.resetForm());
     },
     validationSchema: CreateTaskSchema,
   });
@@ -42,9 +37,9 @@ const TaskListForm = ({ createTaskForList }: TaskListFormProps) => {
           value={formik.values.title}
           isInvalid={formik.touched.title && !!formik.errors.title}
           size="lg"
-          disabled={submitting}
+          disabled={formik.isSubmitting}
         />
-        {submitting && (
+        {formik.isSubmitting && (
           <InputRightElement width="4.5rem">
             <Spinner />
           </InputRightElement>
@@ -55,4 +50,4 @@ const TaskListForm = ({ createTaskForList }: TaskListFormProps) => {
   );
 };
 
-export default TaskListForm;
+export default CreateTaskForm;

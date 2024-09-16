@@ -1,5 +1,4 @@
-import { action, computed, makeObservable, observable } from "mobx";
-import Task from "../models/task";
+import Task from "../models/task/task";
 import { ITask } from "../types/task";
 import { TaskList } from "../types/taskList";
 

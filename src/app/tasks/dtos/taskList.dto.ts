@@ -5,4 +5,5 @@ export interface TaskListResponseDto {
 
 export type CreateTaskListDto = {
   name: string;
+  ownerId: number;
 };
