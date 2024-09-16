@@ -66,6 +66,7 @@ const TaskHomePage = () => {
       const list: TaskListResponseDto = await response.json();
       const taskList = new UserTaskList(list);
       taskStore.addUserList(taskList);
+      setFocusedList(taskList);
       return taskList;
     },
     []

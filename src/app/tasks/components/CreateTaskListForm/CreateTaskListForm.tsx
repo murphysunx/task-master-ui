@@ -55,7 +55,7 @@ const CreateTaskListForm = ({ submit, cancel }: CreateTaskListFormProps) => {
           disabled={formik.isSubmitting}
         />
       </FormControl>
-      <ButtonGroup variant="outline" spacing="6">
+      <ButtonGroup variant="outline" spacing="4" mt={4}>
         <Button type="submit" isLoading={formik.isSubmitting}>
           Save
         </Button>

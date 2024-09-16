@@ -1,4 +1,5 @@
 import { Flex, Text } from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
 import { TaskListAbs } from "../../abstracts/taskList";
 
 type TaskListItemProps = {
@@ -15,4 +16,4 @@ const TaskListItem = ({ list, onClick }: TaskListItemProps) => {
   );
 };
 
-export default TaskListItem;
+export default observer(TaskListItem);

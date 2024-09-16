@@ -10,8 +10,9 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
+import { useCallback } from "react";
 import { TaskListAbs } from "../../abstracts/taskList";
 import { TaskListResponseDto } from "../../dtos/taskList.dto";
 import { UserTaskList } from "../../models/userTaskList/userTaskList";
@@ -49,6 +50,16 @@ const TaskListContainer = ({
 }: TaskListContainerProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const submitTaskList = useCallback(
+    (values: CreateTaskListFormFields) => {
+      return createTaskList(values).then((result) => {
+        onClose();
+        return result;
+      });
+    },
+    [createTaskList, onClose]
+  );
+
   return (
     <Box>
       <List spacing={1}>
@@ -57,7 +68,10 @@ const TaskListContainer = ({
             key={list instanceof UserTaskList ? list.id : "inbox"}
             bgColor={list === activeTaskList ? "gray.100" : "transparent"}
             padding={4}
-            borderRadius={"xl"}
+            borderRadius={"lg"}
+            _hover={{
+              bgColor: list === activeTaskList ? "gray.100" : "gray.50",
+            }}
           >
             <TaskListItem list={list} onClick={() => clickTaskList(list)} />
           </ListItem>
@@ -70,13 +84,13 @@ const TaskListContainer = ({
           onClick={onOpen}
         />
 
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Add List</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <CreateTaskListForm submit={createTaskList} cancel={onClose} />
+              <CreateTaskListForm submit={submitTaskList} cancel={onClose} />
             </ModalBody>
           </ModalContent>
         </Modal>
