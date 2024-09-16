@@ -126,7 +126,7 @@ const TaskHomePage = () => {
   }, [fetchData]);
 
   return (
-    <Flex gap={10} height={"full"}>
+    <Flex gap={4} height={"full"}>
       {error && (
         <Center className="w-full">
           <IconButton
@@ -145,11 +145,14 @@ const TaskHomePage = () => {
           )}
           {!isLoading && (
             <>
-              <TaskListContainer
-                taskLists={taskStore.taskLists}
-                focusTaskList={setFocusedList}
-                createTaskList={createTaskList}
-              />
+              <Box minWidth={"15%"}>
+                <TaskListContainer
+                  activeTaskList={focusedList}
+                  taskLists={taskStore.taskLists}
+                  clickTaskList={setFocusedList}
+                  createTaskList={createTaskList}
+                />
+              </Box>
               <Box>
                 <Divider orientation="vertical" />
               </Box>

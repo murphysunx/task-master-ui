@@ -2,29 +2,32 @@ import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
   IconButton,
+  List,
+  ListItem,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
-  VStack,
+  useDisclosure
 } from "@chakra-ui/react";
 import { TaskListAbs } from "../../abstracts/taskList";
 import { TaskListResponseDto } from "../../dtos/taskList.dto";
 import { UserTaskList } from "../../models/userTaskList/userTaskList";
 import { CreateTaskListFormFields } from "../../types/taskList";
 import CreateTaskListForm from "../CreateTaskListForm/CreateTaskListForm";
+import TaskListItem from "../TaskListItem/TaskListItem";
 
 type TaskListContainerProps = {
+  activeTaskList: TaskListAbs;
   taskLists: ReadonlyArray<TaskListAbs>;
   /**
-   * function to focus a task list
+   * function to handle clicking a task list
    * @param list
    * @returns
    */
-  focusTaskList: (list: TaskListAbs) => void;
+  clickTaskList: (list: TaskListAbs) => void;
   /**
    * function to create a new task list
    * @param values
@@ -35,24 +38,32 @@ type TaskListContainerProps = {
   ) => Promise<TaskListResponseDto>;
 };
 
+/**
+ * a container that shows all task lists of a user
+ */
 const TaskListContainer = ({
+  activeTaskList,
   taskLists,
-  focusTaskList,
+  clickTaskList,
   createTaskList,
 }: TaskListContainerProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <VStack>
-      {taskLists.map((list) => (
-        <Box
-          key={list instanceof UserTaskList ? list.id : "inbox"}
-          onClick={() => focusTaskList(list)}
-        >
-          {list.name}
-        </Box>
-      ))}
-      <Box>
+    <Box>
+      <List spacing={1}>
+        {taskLists.map((list) => (
+          <ListItem
+            key={list instanceof UserTaskList ? list.id : "inbox"}
+            bgColor={list === activeTaskList ? "gray.100" : "transparent"}
+            padding={4}
+            borderRadius={"xl"}
+          >
+            <TaskListItem list={list} onClick={() => clickTaskList(list)} />
+          </ListItem>
+        ))}
+      </List>
+      <Box textAlign={"center"} mt={4}>
         <IconButton
           icon={<AddIcon />}
           aria-label={"create new task list"}
@@ -70,7 +81,7 @@ const TaskListContainer = ({
           </ModalContent>
         </Modal>
       </Box>
-    </VStack>
+    </Box>
   );
 };
 

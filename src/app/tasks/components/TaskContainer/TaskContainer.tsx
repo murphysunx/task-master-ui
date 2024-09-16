@@ -6,7 +6,7 @@ import { TaskResponseDto, UpdateTaskDto } from "../../dtos/task.dto";
 import Task from "../../models/task/task";
 import CreateTaskForm from "../CreateTaskForm/CreateTaskForm";
 import TaskDetailPanel from "../TaskDetailPanel/TaskDetailPanel";
-import TaskListItem from "../TaskListItem/TaskListItem";
+import TaskItem from "../TaskItem/TaskItem";
 
 type TaskContainerProps = {
   taskList: TaskListAbs;
@@ -34,6 +34,9 @@ type TaskContainerProps = {
   deleteTaskFromList: (task: Task, list: TaskListAbs) => Promise<void>;
 };
 
+/**
+ * a container that shows all tasks in a task list
+ */
 const TaskContainer = ({
   taskList,
   createTaskForList,
@@ -64,8 +67,8 @@ const TaskContainer = ({
   );
 
   return (
-    <Flex gap={10}>
-      <Box>
+    <Flex gap={4} flexGrow={1}>
+      <Box minWidth={"30%"}>
         <Flex direction={"column"} gap={4}>
           <Flex justifyContent={"space-between"}>
             <Heading size={"md"}>{taskList.name}</Heading>
@@ -86,7 +89,7 @@ const TaskContainer = ({
                 <ul>
                   {taskList.tasks.map((task) => (
                     <li key={task.id}>
-                      <TaskListItem
+                      <TaskItem
                         task={task.toJS()}
                         focusTask={() => setFocusedTask(task)}
                         toggleTask={() => toggleTask(task)}

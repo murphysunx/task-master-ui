@@ -1,74 +1,17 @@
-import { CloseIcon } from "@chakra-ui/icons";
-import { Checkbox, IconButton } from "@chakra-ui/react";
-import React from "react";
-import { ITask } from "../../types/task";
-import EditableTaskTitle from "../EditableTaskTitle/EditableTaskTitle";
+import { Flex, Text } from "@chakra-ui/react";
+import { TaskListAbs } from "../../abstracts/taskList";
 
-interface TaskListItemProps {
-  task: ITask;
-  /**
-   * focus on a task
-   * @param task a task
-   * @returns
-   */
-  focusTask: () => void;
-  /**
-   * toggle the completion status of a task
-   * @param task a task
-   * @returns
-   */
-  toggleTask: () => Promise<void>;
-  /**
-   * update a task's title
-   * @param title new title
-   * @param task a task
-   * @returns
-   */
-  updateTaskTitle: (newTitle: string) => Promise<void>;
-  /**
-   * delete a task
-   * @param task a task
-   * @returns
-   */
-  deleteTask: () => Promise<void>;
-}
+type TaskListItemProps = {
+  list: TaskListAbs;
+  onClick: () => void;
+};
 
-const TaskListItem: React.FC<TaskListItemProps> = ({
-  task,
-  focusTask,
-  toggleTask,
-  updateTaskTitle,
-  deleteTask,
-}) => {
+const TaskListItem = ({ list, onClick }: TaskListItemProps) => {
   return (
-    <div
-      className="hover:bg-sky-100 shadow-md p-4 border-b border-solid border-gray-700 flex items-center gap-2"
-      onClick={($event) => {
-        focusTask();
-      }}
-    >
-      {/* need to wrap checkbox in a div because needs to stop click event propagation */}
-      <div className="flex" onClick={($event) => $event.stopPropagation()}>
-        <Checkbox
-          isChecked={!!task.completed}
-          onChange={($event) => {
-            toggleTask();
-          }}
-        />
-      </div>
-      <div className="flex-grow">
-        <EditableTaskTitle task={task} updateTaskTitle={updateTaskTitle} />
-      </div>
-      <IconButton
-        className="hover:text-red-600"
-        aria-label="Delete Task"
-        variant="ghost"
-        icon={<CloseIcon />}
-        onClick={($event) => {
-          deleteTask();
-        }}
-      />
-    </div>
+    <Flex justifyContent={"space-between"} role="button" onClick={onClick}>
+      <Text>{list.name}</Text>
+      <Text>{list.tasks.length}</Text>
+    </Flex>
   );
 };
 
