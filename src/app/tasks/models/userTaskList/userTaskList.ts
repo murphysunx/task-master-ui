@@ -10,9 +10,11 @@ export class UserTaskList extends TaskListAbs implements TaskListResponseDto {
     this.id = taskList.id;
     makeObservable(this, {
       name: observable,
+      taskMap: observable,
       addTask: action,
       removeTask: action,
       tasks: computed,
+      empty: action,
     });
   }
 }
