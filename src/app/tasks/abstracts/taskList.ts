@@ -17,6 +17,11 @@ interface TaskListActions {
    * remove all tasks from this list
    */
   empty(): void;
+  /**
+   * check if the task list contains a specific task
+   * @param task a task
+   */
+  containTask(task: ITask): boolean;
 }
 
 export abstract class TaskListAbs implements TaskList, TaskListActions {
@@ -38,5 +43,9 @@ export abstract class TaskListAbs implements TaskList, TaskListActions {
 
   empty(): void {
     this.taskMap.clear();
+  }
+
+  containTask(task: ITask): boolean {
+    return this.taskMap.has(task.id);
   }
 }

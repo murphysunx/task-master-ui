@@ -111,7 +111,7 @@ const TaskContainer = ({
       <Box>
         <Divider orientation="vertical" />
       </Box>
-      {focusedTask && (
+      {focusedTask && taskList.containTask(focusedTask) && (
         <Box>
           <TaskDetailPanel
             task={focusedTask}

@@ -60,4 +60,20 @@ describe("TaskList", () => {
     taskList.empty();
     expect(taskList.tasks).toHaveLength(0);
   });
+
+  test("Should check if the list contain a task", () => {
+    const task = new Task({
+      id: 1,
+      title: `Play football`,
+      userId: 1,
+    });
+    const task1 = new Task({
+      id: 2,
+      title: `Play football`,
+      userId: 1,
+    });
+    taskList.addTask(task);
+    expect(taskList.containTask(task)).toBeTruthy();
+    expect(taskList.containTask(task1)).toBeFalsy();
+  });
 });
