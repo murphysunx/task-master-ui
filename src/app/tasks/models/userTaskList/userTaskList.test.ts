@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
+import { TaskListResponseDto } from "../../dtos/taskList.dto";
 import Task from "../task/task";
 import { UserTaskList } from "./userTaskList";
 
@@ -79,5 +80,13 @@ describe("TaskList", () => {
     taskList.addTask(task);
     expect(taskList.containTask(task)).toBeTruthy();
     expect(taskList.containTask(task1)).toBeFalsy();
+  });
+
+  test("Should update task list", () => {
+    taskList.update({
+      id: 1,
+      name: "Chore 1",
+    } satisfies TaskListResponseDto);
+    expect(taskList.name).toBe("Chore 1");
   });
 });

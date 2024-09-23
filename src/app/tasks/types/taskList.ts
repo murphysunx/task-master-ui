@@ -10,3 +10,5 @@ export interface TaskList {
 }
 
 export type CreateTaskListFormFields = Omit<CreateTaskListDto, "ownerId">;
+
+export type UpdateTaskListFormFields = Omit<CreateTaskListDto, "ownerId">;

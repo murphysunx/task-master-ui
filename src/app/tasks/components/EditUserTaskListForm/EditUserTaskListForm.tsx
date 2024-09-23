@@ -6,41 +6,39 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
+import { observer } from "mobx-react-lite";
 import * as Yup from "yup";
-import { TaskListResponseDto } from "../../dtos/taskList.dto";
+import { UserTaskList } from "../../models/userTaskList/userTaskList";
 import { TaskListSchema } from "../../schemas/taskList";
-import { CreateTaskListFormFields } from "../../types/taskList";
+import { UpdateTaskListFormFields } from "../../types/taskList";
 
-type CreateTaskListFormProps = {
-  /**
-   * function to create a task list
-   * @param dto dto for creating a task list
-   * @returns created task list dto
-   */
-  submit: (dto: CreateTaskListFormFields) => Promise<TaskListResponseDto>;
-  /**
-   * function to cancel task list creation
-   * @returns
-   */
-  cancel: () => void;
+type EditUserTaskListFormProps = {
+  list: UserTaskList;
+  onConfirm: (values: UpdateTaskListFormFields) => Promise<void>;
+  onCancel: () => void;
 };
 
-const CreateTaskListSchema = Yup.object().shape({
+const UpdateTaskListSchema = Yup.object().shape({
   name: TaskListSchema.name,
 } satisfies {
-  [k in keyof CreateTaskListFormFields]: Yup.ISchema<any> | Yup.Reference;
+  [k in keyof UpdateTaskListFormFields]: Yup.ISchema<any> | Yup.Reference;
 });
 
-const CreateTaskListForm = ({ submit, cancel }: CreateTaskListFormProps) => {
-  const formik = useFormik<CreateTaskListFormFields>({
+const EditUserTaskListForm = ({
+  list,
+  onConfirm,
+  onCancel,
+}: EditUserTaskListFormProps) => {
+  const formik = useFormik<UpdateTaskListFormFields>({
     initialValues: {
-      name: "",
+      name: list.name,
     },
     onSubmit: (values) => {
-      return submit(values);
+      return onConfirm(values);
     },
-    validationSchema: CreateTaskListSchema,
+    validationSchema: UpdateTaskListSchema,
   });
+
   return (
     <form onSubmit={formik.handleSubmit} role="form">
       <FormControl>
@@ -59,10 +57,10 @@ const CreateTaskListForm = ({ submit, cancel }: CreateTaskListFormProps) => {
         <Button type="submit" isLoading={formik.isSubmitting}>
           Save
         </Button>
-        <Button onClick={cancel}>Cancel</Button>
+        <Button onClick={onCancel}>Cancel</Button>
       </ButtonGroup>
     </form>
   );
 };
 
-export default CreateTaskListForm;
+export default observer(EditUserTaskListForm);

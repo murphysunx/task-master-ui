@@ -25,7 +25,10 @@ import { GeneralTaskList } from "./models/generalTaskList/generalTaskList";
 import Task from "./models/task/task";
 import { UserTaskList } from "./models/userTaskList/userTaskList";
 import taskStore from "./stores/taskStore";
-import { CreateTaskListFormFields } from "./types/taskList";
+import {
+  CreateTaskListFormFields,
+  UpdateTaskListFormFields,
+} from "./types/taskList";
 
 const TaskHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +71,21 @@ const TaskHomePage = () => {
       taskStore.addUserList(taskList);
       setFocusedList(taskList);
       return taskList;
+    },
+    []
+  );
+
+  const updateUserTaskList = useCallback(
+    async (userTaskList: UserTaskList, values: UpdateTaskListFormFields) => {
+      const response = await fetch(`/api/tasks/lists/${userTaskList.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(values),
+      });
+      if (!response.ok) {
+        throw new Error(`Fail to update a task list`);
+      }
+      const dto = await response.json();
+      userTaskList.update(dto);
     },
     []
   );
@@ -152,6 +170,7 @@ const TaskHomePage = () => {
                   taskLists={taskStore.taskLists}
                   clickTaskList={setFocusedList}
                   createTaskList={createTaskList}
+                  updateUserTaskList={updateUserTaskList}
                 />
               </Box>
               <Box>

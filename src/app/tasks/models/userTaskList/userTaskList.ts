@@ -15,6 +15,11 @@ export class UserTaskList extends TaskListAbs implements TaskListResponseDto {
       removeTask: action,
       tasks: computed,
       empty: action,
+      update: action,
     });
+  }
+
+  update(taskList: TaskListResponseDto) {
+    this.name = taskList.name;
   }
 }
