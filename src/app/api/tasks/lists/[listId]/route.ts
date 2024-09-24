@@ -21,3 +21,17 @@ export async function PATCH(
   const updated: TaskListResponseDto = await response.json();
   return NextResponse.json(updated);
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { listId: string } }
+) {
+  const { listId } = params;
+  const response = await fetch(`${TASK_ENDPOINT}/lists/${listId}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error("failed to delete the task");
+  }
+  return response;
+}

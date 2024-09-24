@@ -54,7 +54,12 @@ const EditUserTaskListForm = ({
         />
       </FormControl>
       <ButtonGroup variant="outline" spacing="4" mt={4}>
-        <Button type="submit" isLoading={formik.isSubmitting}>
+        <Button
+          type="submit"
+          isLoading={formik.isSubmitting}
+          colorScheme="green"
+          variant="solid"
+        >
           Save
         </Button>
         <Button onClick={onCancel}>Cancel</Button>

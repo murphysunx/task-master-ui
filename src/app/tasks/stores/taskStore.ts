@@ -36,6 +36,10 @@ class TaskStore implements ITaskStore {
     return this.userListMap.get(list.id)!;
   }
 
+  removeUserList(list: UserTaskList): void {
+    this.userListMap.delete(list.id);
+  }
+
   addTaskToList(task: Task): void {
     const list = this.findListById(task.listId || void 0);
     list?.addTask(task);

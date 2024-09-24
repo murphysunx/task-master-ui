@@ -90,6 +90,16 @@ const TaskHomePage = () => {
     []
   );
 
+  const deleteUserTaskList = useCallback(async (userTaskList: UserTaskList) => {
+    const response = await fetch(`/api/tasks/lists/${userTaskList.id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error(`Fail to delete a task list`);
+    }
+    taskStore.removeUserList(userTaskList);
+  }, []);
+
   const createTaskForList = useCallback(
     async (title: string, list: GeneralTaskList | UserTaskList) => {
       const response = await fetch(`/api/tasks`, {
@@ -171,6 +181,7 @@ const TaskHomePage = () => {
                   clickTaskList={setFocusedList}
                   createTaskList={createTaskList}
                   updateUserTaskList={updateUserTaskList}
+                  deleteUserTaskList={deleteUserTaskList}
                 />
               </Box>
               <Box>

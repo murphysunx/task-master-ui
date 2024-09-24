@@ -17,6 +17,7 @@ export interface ITaskStore {
    * @param dto task list response dto
    */
   addUserList(list: UserTaskList): UserTaskList;
+  removeUserList(list: UserTaskList): void;
   /**
    * find a task list by id
    * @param id list id

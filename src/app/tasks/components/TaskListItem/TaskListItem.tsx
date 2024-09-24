@@ -9,14 +9,21 @@ import {
 } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import { TaskListAbs } from "../../abstracts/taskList";
+import { UserTaskList } from "../../models/userTaskList/userTaskList";
 
 type TaskListItemProps = {
   list: TaskListAbs;
   onClick: () => void;
   onEdit?: () => void;
+  onDelete?: () => void;
 };
 
-const TaskListItem = ({ list, onClick, onEdit }: TaskListItemProps) => {
+const TaskListItem = ({
+  list,
+  onClick,
+  onEdit,
+  onDelete,
+}: TaskListItemProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -25,7 +32,9 @@ const TaskListItem = ({ list, onClick, onEdit }: TaskListItemProps) => {
         onClick={onClick}
         onContextMenu={(e) => {
           e.preventDefault();
-          onEdit && onOpen();
+          if (list instanceof UserTaskList) {
+            onOpen();
+          }
         }}
         w={"100%"}
         padding={4}
@@ -36,7 +45,12 @@ const TaskListItem = ({ list, onClick, onEdit }: TaskListItemProps) => {
         </Flex>
       </MenuButton>
       <MenuList>
-        <MenuItem onClick={onEdit}>Edit</MenuItem>
+        {onEdit && <MenuItem onClick={onEdit}>Edit</MenuItem>}
+        {onDelete && (
+          <MenuItem onClick={onDelete} textColor="red.400">
+            Delete
+          </MenuItem>
+        )}
       </MenuList>
     </Menu>
   );

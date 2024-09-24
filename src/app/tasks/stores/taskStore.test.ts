@@ -128,4 +128,16 @@ describe("TaskStore", () => {
     expect(taskStore.taskLists[0]).toBe(inbox);
     expect(taskStore.findListById(1)).toBeNull();
   });
+
+  test("Should remove a user list from the store", () => {
+    const userList = new UserTaskList({
+      id: 1,
+      name: "Chore",
+    });
+    taskStore.addUserList(userList);
+    taskStore.removeUserList(userList);
+    expect(taskStore.taskLists).toHaveLength(1);
+    expect(taskStore.taskLists[0]).toBe(taskStore.inbox);
+    expect(taskStore.findListById(1)).toBeNull();
+  });
 });

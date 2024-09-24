@@ -1,6 +1,13 @@
 import { AddIcon } from "@chakra-ui/icons";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
+  Button,
   IconButton,
   List,
   ListItem,
@@ -12,7 +19,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { TaskListAbs } from "../../abstracts/taskList";
 import { TaskListResponseDto } from "../../dtos/taskList.dto";
 import { UserTaskList } from "../../models/userTaskList/userTaskList";
@@ -51,6 +58,7 @@ type TaskListContainerProps = {
     userTaskList: UserTaskList,
     values: UpdateTaskListFormFields
   ) => Promise<void>;
+  deleteUserTaskList: (userTaskList: UserTaskList) => Promise<void>;
 };
 
 /**
@@ -62,6 +70,7 @@ const TaskListContainer = ({
   clickTaskList,
   createTaskList,
   updateUserTaskList,
+  deleteUserTaskList,
 }: TaskListContainerProps) => {
   const {
     isOpen: isCreateModalOpen,
@@ -69,7 +78,7 @@ const TaskListContainer = ({
     onClose: onCreateModalClose,
   } = useDisclosure();
 
-  const [editingList, setEditingList] = useState<UserTaskList | null>(null);
+  const [focusedList, setFocusedList] = useState<UserTaskList | null>(null);
 
   const {
     isOpen: isEditModalOpen,
@@ -77,6 +86,12 @@ const TaskListContainer = ({
     onClose: onEditModalClose,
   } = useDisclosure();
 
+  const {
+    isOpen: isDeleteAlertOpen,
+    onOpen: onDeleteAlertOpen,
+    onClose: onDeleteAlertClose,
+  } = useDisclosure();
+  const deleteAlertCancelRef = useRef<HTMLButtonElement | null>(null);
   const submitTaskListCreation = useCallback(
     (values: CreateTaskListFormFields) => {
       return createTaskList(values).then((result) => {
@@ -87,6 +102,8 @@ const TaskListContainer = ({
     [createTaskList, onCreateModalClose]
   );
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const submitUserTaskListUpdate = useCallback(
     (userTaskList: UserTaskList, values: UpdateTaskListFormFields) => {
       return updateUserTaskList(userTaskList, values).then((result) => {
@@ -95,6 +112,16 @@ const TaskListContainer = ({
       });
     },
     [updateUserTaskList, onEditModalClose]
+  );
+
+  const submitUserTaskListDelete = useCallback(
+    (userTaskList: UserTaskList) => {
+      return deleteUserTaskList(userTaskList).then((result) => {
+        onDeleteAlertClose();
+        return result;
+      });
+    },
+    [deleteUserTaskList, onDeleteAlertClose]
   );
 
   return (
@@ -115,8 +142,16 @@ const TaskListContainer = ({
               onEdit={
                 list instanceof UserTaskList
                   ? () => {
-                      setEditingList(list);
+                      setFocusedList(list);
                       onEditModalOpen();
+                    }
+                  : void 0
+              }
+              onDelete={
+                list instanceof UserTaskList
+                  ? () => {
+                      setFocusedList(list);
+                      onDeleteAlertOpen();
                     }
                   : void 0
               }
@@ -125,24 +160,6 @@ const TaskListContainer = ({
         ))}
       </List>
 
-      <Modal isOpen={isEditModalOpen} onClose={onEditModalClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Edit List</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <EditUserTaskListForm
-              list={editingList as UserTaskList}
-              onConfirm={async (values) => {
-                await submitUserTaskListUpdate(editingList!, values);
-                onEditModalClose();
-              }}
-              onCancel={onEditModalClose}
-            />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-
       <Box textAlign={"center"} mt={4}>
         <IconButton
           icon={<AddIcon />}
@@ -150,11 +167,7 @@ const TaskListContainer = ({
           onClick={onCreateModalOpen}
         />
 
-        <Modal
-          isOpen={isCreateModalOpen}
-          onClose={onCreateModalClose}
-          isCentered
-        >
+        <Modal isOpen={isCreateModalOpen} onClose={onCreateModalClose}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Add List</ModalHeader>
@@ -168,6 +181,68 @@ const TaskListContainer = ({
           </ModalContent>
         </Modal>
       </Box>
+
+      <Modal isOpen={isEditModalOpen} onClose={onEditModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit List</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <EditUserTaskListForm
+              list={focusedList as UserTaskList}
+              onConfirm={async (values) => {
+                await submitUserTaskListUpdate(focusedList!, values);
+                onEditModalClose();
+              }}
+              onCancel={onEditModalClose}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {focusedList && (
+        <AlertDialog
+          isOpen={isDeleteAlertOpen}
+          leastDestructiveRef={deleteAlertCancelRef}
+          onClose={onDeleteAlertClose}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Delete Task List
+              </AlertDialogHeader>
+
+              <AlertDialogBody>
+                {focusedList!.tasks.length === 0
+                  ? "Are you sure? You can't undo this action afterwards."
+                  : `Are you sure? This list contains ${focusedList!.tasks.length === 1 ? "1 task" : `${focusedList!.tasks.length} tasks`}. You can't undo this action afterwards.`}
+              </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button
+                  ref={deleteAlertCancelRef}
+                  onClick={onDeleteAlertClose}
+                  isDisabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  colorScheme="red"
+                  onClick={async () => {
+                    setIsSubmitting(true);
+                    await submitUserTaskListDelete(focusedList!);
+                    setIsSubmitting(false);
+                  }}
+                  ml={3}
+                  isLoading={isSubmitting}
+                >
+                  Delete
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+      )}
     </Box>
   );
 };
