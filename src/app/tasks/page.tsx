@@ -33,9 +33,9 @@ import {
 const TaskHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [focusedList, setFocusedList] = useState<
-    GeneralTaskList | UserTaskList
-  >(taskStore.inbox);
+  const [activeList, setActiveList] = useState<GeneralTaskList | UserTaskList>(
+    taskStore.inbox
+  );
 
   const fetchData = useCallback(async () => {
     const response = await fetch("/api/tasks", { method: "GET" });
@@ -69,7 +69,7 @@ const TaskHomePage = () => {
       const list: TaskListResponseDto = await response.json();
       const taskList = new UserTaskList(list);
       taskStore.addUserList(taskList);
-      setFocusedList(taskList);
+      setActiveList(taskList);
       return taskList;
     },
     []
@@ -90,15 +90,21 @@ const TaskHomePage = () => {
     []
   );
 
-  const deleteUserTaskList = useCallback(async (userTaskList: UserTaskList) => {
-    const response = await fetch(`/api/tasks/lists/${userTaskList.id}`, {
-      method: "DELETE",
-    });
-    if (!response.ok) {
-      throw new Error(`Fail to delete a task list`);
-    }
-    taskStore.removeUserList(userTaskList);
-  }, []);
+  const deleteUserTaskList = useCallback(
+    async (userTaskList: UserTaskList) => {
+      const response = await fetch(`/api/tasks/lists/${userTaskList.id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`Fail to delete a task list`);
+      }
+      taskStore.removeUserList(userTaskList);
+      if (userTaskList === activeList) {
+        setActiveList(taskStore.inbox);
+      }
+    },
+    [activeList]
+  );
 
   const createTaskForList = useCallback(
     async (title: string, list: GeneralTaskList | UserTaskList) => {
@@ -115,10 +121,10 @@ const TaskHomePage = () => {
       }
       const dto = await response.json();
       const task = new Task(dto);
-      focusedList.addTask(task);
+      activeList.addTask(task);
       return dto;
     },
-    [focusedList]
+    [activeList]
   );
 
   const updateTask = useCallback(async (task: Task, updates: UpdateTaskDto) => {
@@ -176,9 +182,9 @@ const TaskHomePage = () => {
             <>
               <Box minWidth={"15%"}>
                 <TaskListContainer
-                  activeTaskList={focusedList}
+                  activeTaskList={activeList}
                   taskLists={taskStore.taskLists}
-                  clickTaskList={setFocusedList}
+                  clickTaskList={setActiveList}
                   createTaskList={createTaskList}
                   updateUserTaskList={updateUserTaskList}
                   deleteUserTaskList={deleteUserTaskList}
@@ -188,7 +194,7 @@ const TaskHomePage = () => {
                 <Divider orientation="vertical" />
               </Box>
               <TaskContainer
-                taskList={focusedList}
+                taskList={activeList}
                 createTaskForList={createTaskForList}
                 updateTask={updateTask}
                 deleteTaskFromList={deleteTaskFromList}
